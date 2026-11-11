@@ -2,14 +2,10 @@ from views.utils import leer_numero, confirmar
 from models.usuario import Usuario
 
 class AuthView:
-    """
-    Vista de consola para el Inicio de Sesión y la Gestión de Usuarios con Credenciales Encriptadas.
-    """
-
     @staticmethod
     def mostrar_banner_login(intento_actual: int, max_intentos: int) -> None:
         print("\n" + "=" * 55)
-        print("   CLÍNICA SANITARIA - INICIO DE SESIÓN SEGURO (SHA-256)")
+        print("   ECHOTECH SOLUTIONS - INICIO DE SESIÓN SEGURO (SHA-256)")
         print("=" * 55)
         print(f"Intento {intento_actual} de {max_intentos} (Por defecto: admin / admin1234)")
         print("-" * 55)
