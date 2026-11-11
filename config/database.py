@@ -4,7 +4,7 @@ from sqlite3 import Connection, Cursor
 class Database:
 
     _instance = None
-    _db_path = "clinica.db"
+    _db_path = "empresa.db"
 
     def __new__(cls):
         if cls._instance is None:
@@ -18,15 +18,17 @@ class Database:
         return conn
 
     def init_db(self) -> None:
-
         conn = self.get_connection()
         try:
-            cursor: Cursor = conn.cursor() 
-            cursor.execute("""         
-                 CREATE TABLE IF NOT EXISTS usuario (
+            cursor: Cursor = conn.cursor()
+            
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS usuario (
                     id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
-                    usuario TEXT NOT NULL UNIQUE,
-                    tipo_usuario TEXT NOT NULL CHECK (tipo_usuario IN ('empleado', 'administrador'))
+                    username TEXT NOT NULL UNIQUE,
+                    password_hash TEXT NOT NULL,
+                    nombre_completo TEXT NOT NULL,
+                    rol TEXT NOT NULL
                 )
             """)
 
@@ -35,7 +37,7 @@ class Database:
                     id_departamento INTEGER PRIMARY KEY AUTOINCREMENT,
                     nombre TEXT NOT NULL UNIQUE,
                     gerente_id INTEGER NULL,
-                    FOREIGN KEY (gerente_id) REFERENCES empleados(id_empleado) ON DELETE SET NULL
+                    FOREIGN KEY (gerente_id) REFERENCES empleado(id_empleado) ON DELETE SET NULL
                 )
             """)
 
@@ -43,59 +45,68 @@ class Database:
                 CREATE TABLE IF NOT EXISTS empleado (
                     id_empleado INTEGER PRIMARY KEY AUTOINCREMENT,
                     id_usuario INTEGER NOT NULL UNIQUE,
-                    nombre TEXT NOT NULL UNIQUE,
+                    nombre TEXT NOT NULL,
                     apellido_paterno TEXT NOT NULL,
                     apellido_materno TEXT NOT NULL,
                     edad INTEGER NOT NULL,
                     direccion TEXT NOT NULL,
                     telefono TEXT NOT NULL,
                     correo TEXT NOT NULL,
-                    id_departamento INTEGER
-                    FOREIGN KEY (id_uduario) REFERENCES usuario(id_usuario) ON DELATE SET NULL,
-                    FOREIGN KEY (id_departamento) REFERENCES departamento(id_departamento) ON DELATE SET NULL
+                    id_departamento INTEGER,
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE SET NULL,
+                    FOREIGN KEY (id_departamento) REFERENCES departamento(id_departamento) ON DELETE SET NULL
                 )
             """)
 
             cursor.execute("""
-                CREATE TABLE IF NOT EXIST admin_rrhh (
-                id_admin INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_usuario INTEGER NOT NULL UNIQUE,
-                nombre TEXT NOT NULL,
-                apellido_paterno TEXT NOT NULL,
-                apellido_materno TEXT NOT NULL,
-                FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELATE SET NULL                
+                CREATE TABLE IF NOT EXISTS proyecto (
+                    id_proyecto INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre_proyecto TEXT NOT NULL,
+                    descripcion TEXT NOT NULL,
+                    fecha_inicio TEXT NOT NULL
                 )
             """)
 
             cursor.execute("""
-                CREATE TABLE IF NOT EXIST registro_tiempo (
-                id_registro INTEGER PRIMARY KEY AUTOINCREMENT,
-                fecha DATE NOT NULL,
-                hora TIME NOT NULL,
-                descripcion TEXT NOT NULL,
-                id_empleado INTEGER NOT NULL,
-                id_proyecto INTEGER NOT NULL,
-                FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado ) ON DELATE SET NULL,
-                FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto) ON DELATE SET NULL
+                CREATE TABLE IF NOT EXISTS admin_rrhh (
+                    id_admin INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_usuario INTEGER NOT NULL UNIQUE,
+                    nombre TEXT NOT NULL,
+                    apellido_paterno TEXT NOT NULL,
+                    apellido_materno TEXT NOT NULL,
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE SET NULL
                 )
             """)
 
             cursor.execute("""
-                CREATE TABLE IF NOT EXIST informe (
-                id_informe INTEGER PRIMARY KEY AUTOINCREMENT,
-                titulo TEXT NOT NULL,
-                fecha DATE NOT NULL,
-                contenido TEXT NOT NULL
+                CREATE TABLE IF NOT EXISTS registro_tiempo (
+                    id_registro INTEGER PRIMARY KEY AUTOINCREMENT,
+                    fecha DATE NOT NULL,
+                    hora TIME NOT NULL,
+                    descripcion TEXT NOT NULL,
+                    id_empleado INTEGER NOT NULL,
+                    id_proyecto INTEGER NOT NULL,
+                    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado) ON DELETE SET NULL,
+                    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto) ON DELETE SET NULL
                 )
             """)
 
-            
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS informe (
+                    id_informe INTEGER PRIMARY KEY AUTOINCREMENT,
+                    titulo TEXT NOT NULL,
+                    fecha DATE NOT NULL,
+                    contenido TEXT NOT NULL
+                )
+            """)
+
             conn.commit()
         except sqlite3.Error as e:
             print(f"Error al inicializar la base de datos: {e}")
         finally:
             conn.close()
 
+        
 if __name__ == "__main__":
     db = Database()
     db.init_db()

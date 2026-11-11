@@ -37,6 +37,52 @@ class Admin_rrhhController:
         except (ValueError, TypeError) as e:
             self.view.mostrar_mensaje(f"Error en los datos ingresados: {e}")
             
-    def editar_admin_rrhh(self) -> None:
         
-    
+    def editar_admin_rrhh(self) -> None:
+        id_admin_rrhh = self.view.solicitar_id()
+        Admin_rrhh = Admin_rrhhDAO.obtener_por_id(id_admin)
+        if not Admin_rrhh:
+            self.view.mostrar_mensaje("Administrador no encontrado.")
+            return
+
+        datos_nuevos = self.view.formulario_editar_admin_rrhh(Admin_rrhh)
+        try:
+            Admin_rrhh.nombre = datos_nuevos['nombre']
+            Admin_rrhh.apellido_paterno = datos_nuevos['apellido paterno']
+            Admin_rrhh.apellido_materno = datos_nuevos['apellido materno']
+            
+            exito = Admin_rrhhDAO.actualizar(admin_rrhh)
+            if exito:
+                self.view.mostrar_mensaje("Administrador actualizado exitosamente.")
+            else:
+                self.view.mostrar_mensaje("Error al actualizar en la base de datos.")
+        except (ValueError, TypeError) as e:
+            self.view.mostrar_mensaje(f"Error en los datos modificados: {e}")
+
+    def eliminar_admin_rrhh(self) -> None:
+        id_admin = self.view.solicitar_id()
+        admin_rrhh = Admin_rrhhDAO.obtener_por_id(id_admin)
+        if not admin_rrhh:
+            self.view.mostrar_mensaje("Administrador no encontrado.")
+            return
+
+        if self.view.confirmar_eliminacion(admin_rrhh.nombre):
+            exito = Admin_rrhhDAO.eliminar(id_admin)
+            if exito:
+                self.view.mostrar_mensaje("Administrador eliminado exitosamente.")
+            else:
+                self.view.mostrar_mensaje("Error al eliminar en la base de datos.")
+        else:
+            self.view.mostrar_mensaje("Operación cancelada.")
+
+    def imprimir_admin_rrhh(self) -> None:
+        id_admin = self.view.solicitar_id()
+        admin_rrhh = Admin_rrhhDAO.obtener_por_id(id_admin)
+        if admin_rrhh:
+            self.view.mostrar_admin_rrhh(admin_rrhh)
+        else:
+            self.view.mostrar_mensaje("Administrador no encontrado.")
+
+    def imprimir_admin_rrhh(self) -> None:
+        admin_rrhh = Admin_rrhhDAO.obtener_todos()
+        self.view.mostrar_lista_administradores(admin_rrhh)              
