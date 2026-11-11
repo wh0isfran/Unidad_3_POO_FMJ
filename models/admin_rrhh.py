@@ -1,4 +1,4 @@
-class AdminRRHH:
+class AdminRRHH: 
     def __init__(self, nombre: str, apellido_paterno: str, apellido_materno: str, id_admin: int | None = None):
         self.id_admin = id_admin
         self.nombre = nombre

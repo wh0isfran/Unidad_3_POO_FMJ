@@ -1,10 +1,11 @@
-from models.admin_rrhh import Admin_rrhh 
-from models.admin_rrhh_dao import Admin_rrhhDAO
-from views.admin_rrhh_view import Admin_rrhhView
+from models.admin_rrhh import AdminRRHH
+from models.admin_rrhh_dao import AdminRrhhDAO
+from views.admin_rrhh_view import AdminRrhhView
 
 class Admin_rrhhController:
     def __init__(self):
-        self.view = Admin_rrhhView()
+        self.view = AdminRrhhView()
+        self.AdminRrhhDAO = AdminRrhhDAO() 
 
     def ejecutar(self) -> None:
         while True:
@@ -26,10 +27,10 @@ class Admin_rrhhController:
                 self.view.mostrar_mensaje("Opción no válida.")
     
     def agregar_admin_rrhh(self) -> None:
-        datos = self.view.formulario_nuevo_admin_rrhh()
+        datos = self.view.formulario_nuevo_admin()
         try:
-            nuevo_admin_rrhh = Admin_rrhh(datos['nombre'], datos['apellido_paterno'], datos['apellido_materno'])
-            exito = Admin_rrhhDAO.crear(nuevo_admin_rrhh)
+            nuevo_admin_rrhh = AdminRRHH(datos['nombre'], datos['apellido_paterno'], datos['apellido_materno'])
+            exito = self.AdminRrhhDAO.insertar(nuevo_admin_rrhh) 
             if exito:
                 self.view.mostrar_mensaje(f"Administrador agregado exitosamente con ID {nuevo_admin_rrhh.id_admin}.")
             else:
@@ -40,7 +41,7 @@ class Admin_rrhhController:
         
     def editar_admin_rrhh(self) -> None:
         id_admin_rrhh = self.view.solicitar_id()
-        Admin_rrhh = Admin_rrhhDAO.obtener_por_id(id_admin)
+        Admin_rrhh = AdminRrhhDAO.obtener_por_id(id_admin_rrhh)
         if not Admin_rrhh:
             self.view.mostrar_mensaje("Administrador no encontrado.")
             return
@@ -51,7 +52,7 @@ class Admin_rrhhController:
             Admin_rrhh.apellido_paterno = datos_nuevos['apellido paterno']
             Admin_rrhh.apellido_materno = datos_nuevos['apellido materno']
             
-            exito = Admin_rrhhDAO.actualizar(admin_rrhh)
+            exito = AdminRrhhDAO.actualizar(Admin_rrhh)
             if exito:
                 self.view.mostrar_mensaje("Administrador actualizado exitosamente.")
             else:
@@ -61,13 +62,13 @@ class Admin_rrhhController:
 
     def eliminar_admin_rrhh(self) -> None:
         id_admin = self.view.solicitar_id()
-        admin_rrhh = Admin_rrhhDAO.obtener_por_id(id_admin)
+        admin_rrhh = AdminRrhhDAO.obtener_por_id(id_admin)
         if not admin_rrhh:
             self.view.mostrar_mensaje("Administrador no encontrado.")
             return
 
         if self.view.confirmar_eliminacion(admin_rrhh.nombre):
-            exito = Admin_rrhhDAO.eliminar(id_admin)
+            exito = AdminRrhhDAO.eliminar(id_admin)
             if exito:
                 self.view.mostrar_mensaje("Administrador eliminado exitosamente.")
             else:
@@ -77,12 +78,12 @@ class Admin_rrhhController:
 
     def imprimir_admin_rrhh(self) -> None:
         id_admin = self.view.solicitar_id()
-        admin_rrhh = Admin_rrhhDAO.obtener_por_id(id_admin)
+        admin_rrhh = AdminRrhhDAO.obtener_por_id(id_admin)
         if admin_rrhh:
             self.view.mostrar_admin_rrhh(admin_rrhh)
         else:
             self.view.mostrar_mensaje("Administrador no encontrado.")
 
     def imprimir_admin_rrhh(self) -> None:
-        admin_rrhh = Admin_rrhhDAO.obtener_todos()
+        admin_rrhh = AdminRrhhDAO.obtener_todos()
         self.view.mostrar_lista_administradores(admin_rrhh)              

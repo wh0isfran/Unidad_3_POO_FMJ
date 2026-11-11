@@ -1,13 +1,15 @@
-from models.reporte_horas import ReporteHoras
 import sqlite3
+from typing import List, Optional
+from config.database import Database
+from models.reporte_horas import ReporteHoras
 
 class ReporteHorasDAO:
-    def __init__(self, db_connection: sqlite3.Connection):
-        self.conn = db_connection
+    def __init__(self):
+        self.db = Database()
 
-    def insertar(self, reporte: ReporteHoras) -> int:
-        cursor = self.conn.cursor()
-        cursor.execute("""
+    def insertar(self, reporte: ReporteHoras) -> Optional[int]:
+        """Guarda un nuevo reporte de horas y devuelve el ID generado."""
+        sql = """
             INSERT INTO reporte_horas (
                 id_empleado, 
                 id_proyecto, 
@@ -15,66 +17,84 @@ class ReporteHorasDAO:
                 fecha, 
                 periodo_mes, 
                 fecha_generacion
-            ) VALUES (?, ?, ?, ?, ?, ?)
-        """, (
-            reporte.id_empleado,
-            reporte.id_proyecto,
-            reporte.horas_trabajadas,
-            reporte.fecha,
-            reporte.periodo_mes,
-            reporte.fecha_generacion
-        ))
-        self.conn.commit()
-        return cursor.lastrowid
-
-    def obtener_por_id(self, id_reporte: int) -> ReporteHoras | None:
-        cursor = self.conn.cursor()
-        cursor.execute("""
-            SELECT id_reporte, id_empleado, id_proyecto, horas_trabajadas, 
-                   fecha, periodo_mes, fecha_generacion 
-            FROM reporte_horas 
-            WHERE id_reporte = ?
-        """, (id_reporte,))
-        
-        fila = cursor.fetchone()
-        if fila:
-            return ReporteHoras(
-                id_reporte=fila[0],
-                id_empleado=fila[1],
-                id_proyecto=fila[2],
-                horas_trabajadas=fila[3],
-                fecha=fila[4],
-                periodo_mes=fila[5],
-                fecha_generacion=fila[6]
             )
-        return None
+            VALUES (?, ?, ?, ?, ?, ?)
+        """
+        conn = self.db.get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                sql,
+                (
+                    reporte.id_empleado,
+                    reporte.id_proyecto,
+                    reporte.horas_trabajadas,
+                    reporte.fecha,
+                    reporte.periodo_mes,
+                    reporte.fecha_generacion
+                )
+            )
+            conn.commit()
+            return cursor.lastrowid
+        except sqlite3.Error as e:
+            print(f"Error al registrar reporte de horas en BD: {e}")
+            return None
+        finally:
+            conn.close()
 
-    def obtener_todos_por_empleado(self, id_empleado: int) -> list[ReporteHoras]:
-        cursor = self.conn.cursor()
-        cursor.execute("""
-            SELECT id_reporte, id_empleado, id_proyecto, horas_trabajadas, 
-                   fecha, periodo_mes, fecha_generacion 
-            FROM reporte_horas 
+    def obtener_por_empleado(self, id_empleado: int) -> List[ReporteHoras]:
+        """Obtiene el historial de reportes de horas de un empleado específico."""
+        sql = """
+            SELECT id_reporte, id_empleado, id_proyecto, horas_trabajadas, fecha, periodo_mes, fecha_generacion
+            FROM reporte_horas
             WHERE id_empleado = ?
-        """, (id_empleado,))
-        
-        filas = cursor.fetchall()
+            ORDER BY id_reporte DESC
+        """
+        conn = self.db.get_connection()
         reportes = []
-        for fila in filas:
-            reporte = ReporteHoras(
-                id_reporte=fila[0],
-                id_empleado=fila[1],
-                id_proyecto=fila[2],
-                horas_trabajadas=fila[3],
-                fecha=fila[4],
-                periodo_mes=fila[5],
-                fecha_generacion=fila[6]
-            )
-            reportes.append(reporte)
+        try:
+            cursor = conn.cursor()
+            cursor.execute(sql, (id_empleado,))
+            for fila in cursor.fetchall():
+                reportes.append(ReporteHoras(
+                    id_reporte=fila["id_reporte"],
+                    id_empleado=fila["id_empleado"],
+                    id_proyecto=fila["id_proyecto"],
+                    horas_trabajadas=fila["horas_trabajadas"],
+                    fecha=fila["fecha"],
+                    periodo_mes=fila["periodo_mes"],
+                    fecha_generacion=fila["fecha_generacion"]
+                ))
+        except sqlite3.Error as e:
+            print(f"Error al consultar reportes de horas: {e}")
+        finally:
+            conn.close()
         return reportes
 
-    def eliminar(self, id_reporte: int) -> bool:
-        cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM reporte_horas WHERE id_reporte = ?", (id_reporte,))
-        self.conn.commit()
-        return cursor.rowcount > 0
+    def listar_todas(self) -> List[ReporteHoras]:
+        """Lista todos los reportes de horas emitidos en el sistema."""
+        sql = """
+            SELECT id_reporte, id_empleado, id_proyecto, horas_trabajadas, fecha, periodo_mes, fecha_generacion
+            FROM reporte_horas
+            ORDER BY id_reporte DESC
+        """
+        conn = self.db.get_connection()
+        reportes = []
+        try:
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            for fila in cursor.fetchall():
+                reportes.append(ReporteHoras(
+                    id_reporte=fila["id_reporte"],
+                    id_empleado=fila["id_empleado"],
+                    id_proyecto=fila["id_proyecto"],
+                    horas_trabajadas=fila["horas_trabajadas"],
+                    fecha=fila["fecha"],
+                    periodo_mes=fila["periodo_mes"],
+                    fecha_generacion=fila["fecha_generacion"]
+                ))
+        except sqlite3.Error as e:
+            print(f"Error al listar reportes de horas: {e}")
+        finally:
+            conn.close()
+        return reportes

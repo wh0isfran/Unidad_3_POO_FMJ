@@ -1,5 +1,5 @@
 from views.utils import leer_numero, confirmar
-from models.admin_rrhh import AdminRrhh  
+from models.admin_rrhh import AdminRRHH 
 
 class AdminRrhhView:
     
@@ -35,13 +35,13 @@ class AdminRrhhView:
         return leer_numero("Ingrese el ID del admin: ")
 
     @staticmethod
-    def mostrar_admin(admin_rrhh: AdminRrhh) -> None:
+    def mostrar_admin(admin_rrhh: AdminRRHH) -> None:
         print("\n--- Datos del Admin RRHH ---")
         print(admin_rrhh)
         print("-" * 30)
 
     @staticmethod
-    def mostrar_lista_admin(lista_admin: list[AdminRrhh]) -> None:
+    def mostrar_lista_admin(lista_admin: list[AdminRRHH]) -> None:
         print("\n--- Lista de Admin RRHH ---")
         if not lista_admin:
             print("No hay admin RRHH registrado.")
@@ -51,7 +51,7 @@ class AdminRrhhView:
             print("-" * 30)
 
     @staticmethod
-    def formulario_editar_admin(admin_rrhh: AdminRrhh) -> dict:
+    def formulario_editar_admin(admin_rrhh: AdminRRHH) -> dict:
         print(f"\n--- Editando Admin RRHH [ID: {admin_rrhh.id_admin}] ---")
         print("Deje en blanco si no desea modificar el campo de texto.")
 

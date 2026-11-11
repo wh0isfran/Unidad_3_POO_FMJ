@@ -11,3 +11,10 @@ def confirmar(mensaje: str) -> bool:
         if resp in ("si", "no"):
             return resp == "si"
         print("Respuesta no válida. Por favor, ingrese 'si' o 'no'.")
+
+def leer_texto(mensaje: str) -> str:
+    while True:
+        texto = input(mensaje).strip()
+        if texto:
+            return texto
+        print("Error: El campo no puede estar vacío.")

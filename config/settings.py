@@ -9,10 +9,6 @@ except ImportError:
     pass
 
 class Settings:
-    """
-    Centraliza las variables de configuración del sistema.
-    Evita exponer credenciales hardcodeadas en el código fuente.
-    """
     API_BASE_URL: str = os.getenv("API_BASE_URL", "https://api.fda.gov/drug/label.json")
     API_KEY: str = os.getenv("API_KEY", "")
     REQUEST_TIMEOUT: int = int(os.getenv("REQUEST_TIMEOUT", "5"))

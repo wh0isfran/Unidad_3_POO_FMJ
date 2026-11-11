@@ -10,28 +10,31 @@ from controllers.reporte_horas_controller import ReporteHorasController
 class MainController:
     def __init__(self, usuario_actual=None):
         self.view = MainView()
-        self.usuario_actual = usuario_actual
+        self.admin_rrhh_controller = Admin_rrhhController()
+        self.departamento_controller = DepartamentoController()
+        self.empleado_controller = EmpleadoController()
+        self.proyecto_controller = ProyectoController()
+        self.registro_tiempo_controller = RegistroTiempoController()
+        self.informe_controller = InformeController()
         self.reporte_horas_controller = ReporteHorasController()
 
     def ejecutar(self) -> None:
         while True:
-            opcion = self.view.mostrar_menu(self.usuario_actual)
+            opcion = self.view.mostrar_menu() 
             
             if opcion == 1:
-                self.view.mostrar_mensaje("Módulo de Administradores de RRHH")
+                self.admin_rrhh_controller.ejecutar()
             elif opcion == 2:
-                self.view.mostrar_mensaje("Módulo de Departamentos")
+                self.departamento_controller.ejecutar()
             elif opcion == 3:
-                self.view.mostrar_mensaje("Módulo de Empleados")
+                self.empleado_controller.ejecutar()
             elif opcion == 4:
-                self.view.mostrar_mensaje("Módulo de Proyectos")
+                self.proyecto_controller.ejecutar()
             elif opcion == 5:
-                self.view.mostrar_mensaje("Módulo de Registros de Tiempo")
+                self.registro_tiempo_controller.ejecutar()
             elif opcion == 6:
-                self.view.mostrar_mensaje("Módulo de Informes")
+                self.informe_controller.ejecutar()
             elif opcion == 7:
-                self.view.mostrar_mensaje("Módulo de Usuarios ")
-            elif opcion == 8:
                 self.reporte_horas_controller.ejecutar()
             elif opcion == 0:
                 self.view.mostrar_mensaje("Saliendo del Sistema de Echotech Solutions. ¡Hasta luego!")

@@ -1,5 +1,5 @@
 from views.reporte_horas_view import ReporteHorasView
-from services.reporte_horas_service import ReporteHorasService
+from services.reporte_horas_services import ReporteHorasService
 from models.reporte_horas_dao import ReporteHorasDAO
 
 class ReporteHorasController:
