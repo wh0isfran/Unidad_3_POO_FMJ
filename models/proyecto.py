@@ -1,12 +1,4 @@
 class Proyecto:
-    """
-    Modelo (DTO) para la entidad Proyecto.
-    Atributos:
-    - id_proyecto (int | None): Identificador único del proyecto en BD.
-    - nombre_proyecto (str): Nombre del proyecto.
-    - descripcion (str): Descripción detallada.
-    - fecha_inicio (str): Fecha de inicio (ej. YYYY-MM-DD).
-    """
     def __init__(self, nombre_proyecto: str, descripcion: str, fecha_inicio: str, id_proyecto: int | None = None):
         self.id_proyecto = id_proyecto
         self.nombre_proyecto = nombre_proyecto

@@ -53,8 +53,8 @@ class Database:
                     telefono TEXT NOT NULL,
                     correo TEXT NOT NULL,
                     id_departamento INTEGER,
-                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE SET NULL,
-                    FOREIGN KEY (id_departamento) REFERENCES departamento(id_departamento) ON DELETE SET NULL
+                    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+                    FOREIGN KEY (id_departamento) REFERENCES departamento(id_departamento) ON DELETE CASCADE
                 )
             """)
 
@@ -86,8 +86,8 @@ class Database:
                     descripcion TEXT NOT NULL,
                     id_empleado INTEGER NOT NULL,
                     id_proyecto INTEGER NOT NULL,
-                    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado) ON DELETE SET NULL,
-                    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto) ON DELETE SET NULL
+                    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado) ON DELETE CASCADE,
+                    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto) ON DELETE CASCADE
                 )
             """)
 
@@ -97,6 +97,20 @@ class Database:
                     titulo TEXT NOT NULL,
                     fecha DATE NOT NULL,
                     contenido TEXT NOT NULL
+                )
+            """)
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS reporte_horas (
+                    id_reporte INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_empleado INTEGER NOT NULL,
+                    id_proyecto INTEGER NOT NULL,
+                    horas_trabajadas REAL NOT NULL,
+                    fecha DATE NOT NULL,
+                    periodo_mes TEXT NOT NULL,
+                    fecha_generacion TEXT NOT NULL,
+                    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado) ON DELETE CASCADE,
+                    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto) ON DELETE CASCADE
                 )
             """)
 

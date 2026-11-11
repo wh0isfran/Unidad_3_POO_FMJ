@@ -3,11 +3,6 @@ from config.database import Database
 from models.registro_tiempo import RegistroTiempo
 
 class RegistroTiempoDAO:
-    """
-    Data Access Object para la entidad Registro de Tiempo.
-    Maneja las operaciones CRUD en la base de datos.
-    """
-
     @staticmethod
     def crear(registro: RegistroTiempo) -> bool:
         conn = Database().get_connection()

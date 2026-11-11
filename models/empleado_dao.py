@@ -3,11 +3,6 @@ from config.database import Database
 from models.empleado import Empleado
 
 class EmpleadoDAO:
-    """
-    Data Access Object para la entidad Empleado.
-    Maneja las operaciones CRUD en la base de datos.
-    """
-
     @staticmethod
     def crear(empleado: Empleado) -> bool:
         conn = Database().get_connection()

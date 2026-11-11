@@ -5,12 +5,6 @@ from config.settings import Settings
 from models.usuario import Usuario
 
 class UsuarioDAO:
-    """
-    Data Access Object para la entidad Usuario.
-    Gestiona la persistencia de cuentas y credenciales encriptadas en SQLite
-    utilizando consultas parametrizadas (?) contra SQL Injection (Bandit B608).
-    """
-
     @staticmethod
     def crear(usuario: Usuario) -> bool:
         conn = Database().get_connection()

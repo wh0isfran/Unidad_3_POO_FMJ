@@ -3,11 +3,6 @@ from config.database import Database
 from models.informe import Informe
 
 class InformeDAO:
-    """
-    Data Access Object para la entidad Informe.
-    Maneja las operaciones CRUD en la base de datos.
-    """
-
     @staticmethod
     def crear(informe: Informe) -> bool:
         conn = Database().get_connection()

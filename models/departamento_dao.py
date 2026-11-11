@@ -3,11 +3,6 @@ from config.database import Database
 from models.departamento import Departamento
 
 class DepartamentoDAO:
-    """
-    Data Access Object para la entidad Departamento.
-    Maneja las operaciones CRUD en la base de datos.
-    """
-
     @staticmethod
     def crear(departamento: Departamento) -> bool:
         conn = Database().get_connection()

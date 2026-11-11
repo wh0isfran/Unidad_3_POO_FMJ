@@ -3,11 +3,6 @@ from config.database import Database
 from models.proyecto import Proyecto
 
 class ProyectoDAO:
-    """
-    Data Access Object para la entidad Proyecto.
-    Maneja las operaciones CRUD en la base de datos.
-    """
-
     @staticmethod
     def crear(proyecto: Proyecto) -> bool:
         conn = Database().get_connection()
