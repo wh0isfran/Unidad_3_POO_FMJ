@@ -5,7 +5,7 @@ class MainView:
     @staticmethod
     def mostrar_menu(usuario_actual: Usuario | None = None) -> int:
         print("\n" + "=" * 55)
-        print("     CLÍNICA SANITARIA - MENÚ PRINCIPAL (U3)")
+        print("     ECHOTECH SOLUTIONS - MENÚ PRINCIPAL (U3)")
         if usuario_actual:
             print(f"     Sesión activa: {usuario_actual.username} ({usuario_actual.rol})")
         print("=" * 55)
@@ -15,7 +15,7 @@ class MainView:
         print("4.- Gestión de Proyectos")
         print("5.- Gestión de Registros de Tiempo")
         print("6.- Gestión de Informes")
-        print("7.- Reporte de horas trabajadas (Consumo de API)")
+        print("7.- Reporte de horas trabajadas (Consumo de API)(SIMULACIÓN)")
         print("8.- Gestión de usuarios (credenciales encriptadas)")
         print("9.- Cerrar sesión (cambiar de usuario)")
         print("0.- Salir del Sistema")

@@ -42,27 +42,12 @@ class ReporteHorasController:
             self.view.mostrar_error(f"Error inesperado: {str(e)}")
 
     def registrar_reporte_horas(self) -> None:
-        periodo = self.view.pedir_periodo_busqueda()
-        if not periodo:
+        datos_extra = self.view.pedir_datos_reporte()
+
+        if not datos_extra:
             return
 
         try:
-            reportes, estado = self.service.buscar_reportes_externos(periodo)
-            self.view.mostrar_mensaje(estado)
-            
-            if not reportes:
-                return
-
-            self.view.mostrar_reportes_externos(reportes)
-            rep_seleccionado = self.view.seleccionar_reporte(reportes)
-            if not rep_seleccionado:
-                return
-
-            datos_extra = self.view.pedir_datos_reporte()
-            if not datos_extra:
-                return
-
-            # Crear el objeto final combinando datos de la API y formularios validados
             nuevo_reporte = ReporteHoras(
                 id_empleado=datos_extra["id_empleado"],
                 id_proyecto=datos_extra["id_proyecto"],
@@ -72,32 +57,36 @@ class ReporteHorasController:
                 fecha_generacion=datos_extra["fecha_generacion"]
             )
 
-            # Persistencia en SQLite
             id_generado = self.reporte_dao.insertar(nuevo_reporte)
+
             if id_generado:
-                nuevo_reporte.id_reporte = id_generado
                 self.view.mostrar_mensaje(
-                    f"Reporte #{id_generado} emitido y guardado con éxito en SQLite!\n"
-                    f"Empleado ID: {nuevo_reporte.id_empleado} | Proyecto ID: {nuevo_reporte.id_proyecto} | Horas: {nuevo_reporte.horas_trabajadas}h"
+                    f"Reporte #{id_generado} guardado correctamente."
                 )
             else:
-                self.view.mostrar_error("No se pudo guardar el reporte en la base de datos.")
+                self.view.mostrar_error(
+                    "No se pudo guardar el reporte."
+                )
 
         except ValueError as e:
             self.view.mostrar_error(str(e))
+
         except Exception as e:
-            self.view.mostrar_error(f"Error al emitir reporte: {str(e)}")
+            self.view.mostrar_error(
+                f"Error al registrar el reporte: {e}"
+            )
 
     def consultar_reportes_empleado(self) -> None:
         id_emp = self.view.pedir_id_empleado()
+
         if not id_emp:
             return
-        reportes = self.reporte_dao.obtener_todos_por_empleado(id_emp)
+
+        reportes = self.reporte_dao.obtener_por_empleado(id_emp)
         self.view.mostrar_listado_local(reportes)
 
     def listar_todos_reportes(self) -> None:
-        # Asumiendo que el DAO tiene un método para listar todos, o puedes adaptarlo según tus necesidades
-        reportes = getattr(self.reporte_dao, "obtener_todos", lambda: [])()
+        reportes = self.reporte_dao.listar_todas()
         self.view.mostrar_listado_local(reportes)
 
     def diagnosticar_conexion(self) -> None:

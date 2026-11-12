@@ -9,7 +9,7 @@ except ImportError:
     pass
 
 class Settings:
-    API_BASE_URL: str = os.getenv("API_BASE_URL", "https://api.fda.gov/drug/label.json")
+    API_BASE_URL: str = os.getenv("API_BASE_URL", "https://jsonplaceholder.typicode.com/posts")
     API_KEY: str = os.getenv("API_KEY", "")
     REQUEST_TIMEOUT: int = int(os.getenv("REQUEST_TIMEOUT", "5"))
     ENABLE_OFFLINE_FALLBACK: bool = os.getenv("ENABLE_OFFLINE_FALLBACK", "True").lower() in ("true", "1", "yes")

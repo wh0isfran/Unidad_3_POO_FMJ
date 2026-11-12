@@ -12,7 +12,7 @@ from config.settings import Settings
 from models.reporte_horas import ReporteHoras
 
 class ReporteHorasService:
-    # Catálogo de respaldo local por si se corta internet en la empresa
+    #Código de respaldo
     REPORTE_CONTINGENCIA = [
         ReporteHoras(id_empleado=1, id_proyecto=101, horas_trabajadas=8.0, fecha="2026-11-01", periodo_mes="2026-11", fecha_generacion="2026-11-11"),
         ReporteHoras(id_empleado=2, id_proyecto=102, horas_trabajadas=7.5, fecha="2026-11-01", periodo_mes="2026-11", fecha_generacion="2026-11-11"),
@@ -20,101 +20,149 @@ class ReporteHorasService:
     ]
 
     @classmethod
-    def probar_conectividad(cls) -> Tuple[bool, str]:
-        """Verifica si la API externa está accesible."""
+    def probar_conectividad(cls):
         if not REQUESTS_AVAILABLE:
-            return (False, "Librería 'requests' no instalada. Ejecute 'pip install requests'.")
+            return False, "La librería requests no está instalada."
 
         try:
-            resp = requests.get(
+            response = requests.get(
                 Settings.API_BASE_URL,
-                params={"limit": 1},
+                params={"_limit": 1},
+                headers={"Accept": "application/json"},
                 timeout=Settings.REQUEST_TIMEOUT
             )
-            if resp.status_code in (200, 404):
-                return (True, f"Conexión exitosa con {Settings.API_BASE_URL} (Código HTTP: {resp.status_code})")
-            return (False, f"El servidor respondió con código HTTP: {resp.status_code}")
+
+            response.raise_for_status()
+
+            datos = response.json()
+
+            if not isinstance(datos, list):
+                return False, "La API respondió, pero el formato de datos no es el esperado."
+
+            return True, "Conexión correcta con la API externa."
+
         except requests.exceptions.Timeout:
-            return (False, "Timeout al contactar el servicio.")
-        except requests.exceptions.ConnectionError:
-            return (False, "Sin conexión de red hacia el servidor.")
-        except Exception as e:
-            return (False, f"Error de red: {str(e)}")
+            return False, "Se agotó el tiempo de espera."
+
+        except requests.exceptions.RequestException as e:
+            return False, f"Error de conexión: {e}"
+
+        except ValueError as e:
+            return False, f"Respuesta JSON inválida: {e}"
 
     @staticmethod
     def sanitizar_periodo(periodo: str) -> str:
-        """Valida que el periodo cumpla con el formato YYYY-MM y no contenga caracteres maliciosos."""
-        if not periodo or not isinstance(periodo, str):
-            raise ValueError("El periodo de búsqueda debe ser un texto válido.")
-        
+        from datetime import datetime
+
+        if not isinstance(periodo, str) or not periodo.strip():
+            raise ValueError("Debe ingresar un período válido.")
+
         limpio = periodo.strip()
-        if not re.match(r"^\d{4}-\d{2}$", limpio):
-            raise ValueError("El periodo contiene un formato no permitido (Use YYYY-MM).")
+
+        try:
+            datetime.strptime(limpio, "%Y-%m")
+        except ValueError:
+            raise ValueError(
+                "Período inválido. Utilice el formato YYYY-MM."
+            )
 
         return limpio
 
     @classmethod
-    def _manejar_contingencia(cls, periodo: str, mensaje_error: str) -> Tuple[List[ReporteHoras], str]:
-        """Retorna datos de respaldo locales cuando la API no está disponible o falla."""
-        filtrados = [r for r in cls.REPORTE_CONTINGENCIA if r.periodo_mes == periodo]
-        resultado = filtrados if filtrados else cls.REPORTE_CONTINGENCIA
-        return resultado, f"Modo Contingencia Activo: {mensaje_error}"
+    def _manejar_contingencia(cls, periodo: str, mensaje_error: str):
+        if not Settings.ENABLE_OFFLINE_FALLBACK:
+            return [], f"API no disponible: {mensaje_error}"
+
+        filtrados = [
+            reporte
+            for reporte in cls.REPORTE_CONTINGENCIA
+            if reporte.periodo_mes == periodo
+        ]
+
+        if not filtrados:
+            return [], (
+                f"API no disponible: {mensaje_error}. "
+                f"No existen datos locales para {periodo}."
+            )
+
+        return filtrados, (
+            f"Modo contingencia activo: {mensaje_error}. "
+            f"Se muestran datos locales de {periodo}."
+        )
 
     @classmethod
-    def buscar_reportes_externos(cls, periodo: str) -> Tuple[List[ReporteHoras], str]:
-        """Consulta la API externa de horas con el periodo solicitado."""
+    def buscar_reportes_externos(cls, periodo: str):
+        from datetime import date
+
         periodo_seguro = cls.sanitizar_periodo(periodo)
 
         if not REQUESTS_AVAILABLE:
             return cls._manejar_contingencia(
                 periodo_seguro,
-                "Librería 'requests' no instalada en el entorno."
+                "La librería requests no está instalada."
             )
-
-        headers = {
-            "Accept": "application/json",
-            "User-Agent": "EmpresaControlHorasApp/1.0"
-        }
-
-        # Inyección segura de token si existe
-        if hasattr(Settings, "API_KEY") and Settings.API_KEY:
-            headers["Authorization"] = f"Bearer {Settings.API_KEY}"
-
-        params = {
-            "periodo": periodo_seguro,
-            "limit": 10
-        }
 
         try:
-            url = getattr(Settings, "API_BASE_URL", "https://api.empresa-control-horas.com/v1/reportes")
-            response = requests.get(url, headers=headers, params=params, timeout=getattr(Settings, "REQUEST_TIMEOUT", 5))
+            response = requests.get(
+                Settings.API_BASE_URL,
+                params={"_limit": 10},
+                headers={"Accept": "application/json"},
+                timeout=Settings.REQUEST_TIMEOUT
+            )
 
-            if response.status_code == 200:
-                data = response.json()
-                reportes = []
-                
-                # Mapeo de la respuesta JSON externa al modelo de dominio ReporteHoras
-                for item in data.get("resultados", []):
-                    reporte = ReporteHoras(
-                        id_empleado=item.get("id_empleado"),
-                        id_proyecto=item.get("id_proyecto"),
-                        horas_trabajadas=item.get("horas_trabajadas"),
-                        fecha=item.get("fecha"),
-                        periodo_mes=item.get("periodo_mes"),
-                        fecha_generacion=item.get("fecha_generacion"),
-                        id_reporte=item.get("id_reporte")
-                    )
-                    reportes.append(reporte)
-                
-                return reportes, "Consulta exitosa desde la API externa."
-            else:
-                return cls._manejar_contingencia(
-                    periodo_seguro,
-                    f"Error HTTP del servidor externo: {response.status_code}"
+            response.raise_for_status()
+
+            datos = response.json()
+
+            if not isinstance(datos, list):
+                raise ValueError("La respuesta de la API no es una lista.")
+
+            reportes = []
+
+            for item in datos:
+                id_empleado = int(item["userId"])
+                id_proyecto = int(item["id"])
+
+                if id_empleado <= 0 or id_proyecto <= 0:
+                    raise ValueError("Se recibió un identificador inválido.")
+
+                reporte = ReporteHoras(
+                    id_empleado=id_empleado,
+                    id_proyecto=id_proyecto,
+                    horas_trabajadas=float((id_proyecto % 8) + 1),
+                    fecha=f"{periodo_seguro}-01",
+                    periodo_mes=periodo_seguro,
+                    fecha_generacion=date.today().isoformat(),
+                    id_reporte=id_proyecto
                 )
 
-        except Exception as e:
+                reportes.append(reporte)
+
+            return reportes, (
+                "Consulta exitosa. Datos demostrativos obtenidos desde la API."
+            )
+
+        except requests.exceptions.Timeout:
             return cls._manejar_contingencia(
                 periodo_seguro,
-                f"Fallo de conexión o timeout: {str(e)}"
+                "Tiempo de espera agotado."
             )
+
+        except requests.exceptions.HTTPError as e:
+            return cls._manejar_contingencia(
+                periodo_seguro,
+                f"Error HTTP: {e}"
+            )
+
+        except requests.exceptions.RequestException as e:
+            return cls._manejar_contingencia(
+                periodo_seguro,
+                f"Error de conexión: {e}"
+            )
+
+        except (ValueError, KeyError, TypeError) as e:
+            return cls._manejar_contingencia(
+                periodo_seguro,
+                f"Error al interpretar los datos: {e}"
+            )
+        
