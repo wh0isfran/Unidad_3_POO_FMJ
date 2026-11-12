@@ -66,11 +66,20 @@ class Usuario:
     def rol(self, valor: str) -> None:
         if not isinstance(valor, str) or not valor.strip():
             raise ValueError("El rol del usuario no puede estar vacío.")
-        rol_limpio = valor.strip().capitalize()
-        if rol_limpio not in self.ROLES:
+
+        rol_limpio = valor.strip()
+
+        roles_validos = {
+            rol.lower(): rol for rol in self.ROLES
+        }
+
+        if rol_limpio.lower() not in roles_validos:
             opciones = ", ".join(sorted(self.ROLES))
-            raise ValueError(f"Rol '{valor}' no válido. Opciones permitidas: {opciones}.")
-        self._rol = rol_limpio
+            raise ValueError(
+                f"Rol '{valor}' no válido. Opciones permitidas: {opciones}."
+            )
+
+        self._rol = roles_validos[rol_limpio.lower()]
 
     @staticmethod
     def encriptar_credencial(clave_plana: str) -> str:
