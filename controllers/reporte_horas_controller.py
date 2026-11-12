@@ -1,4 +1,5 @@
 from views.reporte_horas_view import ReporteHorasView
+from models.reporte_horas import ReporteHoras
 from services.reporte_horas_services import ReporteHorasService
 from models.reporte_horas_dao import ReporteHorasDAO
 

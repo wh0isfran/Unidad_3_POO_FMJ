@@ -44,7 +44,7 @@ class Database:
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS empleado (
                     id_empleado INTEGER PRIMARY KEY AUTOINCREMENT,
-                    id_usuario INTEGER NOT NULL UNIQUE,
+                    id_usuario INTEGER,
                     nombre TEXT NOT NULL,
                     apellido_paterno TEXT NOT NULL,
                     apellido_materno TEXT NOT NULL,

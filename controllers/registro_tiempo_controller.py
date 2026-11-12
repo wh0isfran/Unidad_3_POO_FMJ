@@ -28,7 +28,13 @@ class RegistroTiempoController:
     def agregar_registro(self) -> None:
         datos = self.view.formulario_nuevo_registro()
         try:
-            nuevo_registro = RegistroTiempo(datos['fecha'], datos['hora'], datos['descripcion'])
+            nuevo_registro = RegistroTiempo(
+                fecha=datos['fecha'],
+                hora=datos['hora'],
+                descripcion=datos['descripcion'],
+                id_empleado=datos['id_empleado'],
+                id_proyecto=datos['id_proyecto']
+            )
             exito = RegistroTiempoDAO.crear(nuevo_registro)
             if exito:
                 self.view.mostrar_mensaje(f"Registro de tiempo agregado exitosamente con ID {nuevo_registro.id_registro}.")
@@ -49,6 +55,8 @@ class RegistroTiempoController:
             registro.fecha = datos_nuevos['fecha']
             registro.hora = datos_nuevos['hora']
             registro.descripcion = datos_nuevos['descripcion']
+            registro.id_empleado = datos_nuevos['id_empleado']
+            registro.id_proyecto = datos_nuevos['id_proyecto']
 
             exito = RegistroTiempoDAO.actualizar(registro)
             if exito:

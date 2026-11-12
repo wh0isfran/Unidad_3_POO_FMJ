@@ -2,7 +2,7 @@ from models.admin_rrhh import AdminRRHH
 from models.admin_rrhh_dao import AdminRrhhDAO
 from views.admin_rrhh_view import AdminRrhhView
 
-class Admin_rrhhController:
+class AdminRrhhController:
     def __init__(self):
         self.view = AdminRrhhView()
         self.AdminRrhhDAO = AdminRrhhDAO() 
@@ -29,8 +29,8 @@ class Admin_rrhhController:
     def agregar_admin_rrhh(self) -> None:
         datos = self.view.formulario_nuevo_admin()
         try:
-            nuevo_admin_rrhh = AdminRRHH(datos['nombre'], datos['apellido_paterno'], datos['apellido_materno'])
-            exito = self.AdminRrhhDAO.insertar(nuevo_admin_rrhh) 
+            nuevo_admin_rrhh = AdminRRHH(datos['nombre'], datos['apellido_paterno'], datos['apellido_materno'], id_admin=datos.get('id_admin'))
+            exito = AdminRrhhDAO.crear(nuevo_admin_rrhh) 
             if exito:
                 self.view.mostrar_mensaje(f"Administrador agregado exitosamente con ID {nuevo_admin_rrhh.id_admin}.")
             else:
@@ -86,4 +86,4 @@ class Admin_rrhhController:
 
     def imprimir_admin_rrhh(self) -> None:
         admin_rrhh = AdminRrhhDAO.obtener_todos()
-        self.view.mostrar_lista_administradores(admin_rrhh)              
+        self.view.mostrar_lista_admin(admin_rrhh)              

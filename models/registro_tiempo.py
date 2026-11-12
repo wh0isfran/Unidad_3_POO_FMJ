@@ -1,9 +1,11 @@
 class RegistroTiempo:
-    def __init__(self, fecha: str, hora: str, descripcion: str, id_registro: int | None = None):
+    def __init__(self, fecha: str, hora: str, descripcion: str, id_empleado: int, id_proyecto: int, id_registro: int = None):
         self.id_registro = id_registro
-        self.fecha = fecha
+        self.fecha = fecha  
         self.hora = hora
         self.descripcion = descripcion
+        self.id_empleado = id_empleado
+        self.id_proyecto = id_proyecto
 
     @property
     def fecha(self) -> str:

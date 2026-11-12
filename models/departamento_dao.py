@@ -9,8 +9,8 @@ class DepartamentoDAO:
         try:
             cursor: Cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO departamento (nombre, gerente) VALUES (?, ?)",
-                (departamento.nombre, departamento.gerente)
+                "INSERT INTO departamento (nombre, gerente_id) VALUES (?, ?)",
+                (departamento.nombre, departamento.gerente_id)
             )
             conn.commit()
             departamento.id_departamento = cursor.lastrowid
@@ -27,10 +27,10 @@ class DepartamentoDAO:
         departamentos = []
         try:
             cursor: Cursor = conn.cursor()
-            cursor.execute("SELECT id_departamento, nombre, gerente FROM departamento")
+            cursor.execute("SELECT id_departamento, nombre, gerente_id FROM departamento")
             filas = cursor.fetchall()
             for fila in filas:
-                departamentos.append(Departamento(fila['nombre'], fila['gerente'], fila['id_departamento']))
+                departamentos.append(Departamento(fila['nombre'], fila['gerente_id'], fila['id_departamento']))
         except Exception as e:
             print(f"Error al obtener departamentos: {e}")
         finally:
@@ -43,10 +43,10 @@ class DepartamentoDAO:
         departamento = None
         try:
             cursor: Cursor = conn.cursor()
-            cursor.execute("SELECT id_departamento, nombre, gerente FROM departamento WHERE id_departamento = ?", (id_departamento,))
+            cursor.execute("SELECT id_departamento, nombre, gerente_id FROM departamento WHERE id_departamento = ?", (id_departamento,))
             fila = cursor.fetchone()
             if fila:
-                departamento = Departamento(fila['nombre'], fila['gerente'], fila['id_departamento'])
+                departamento = Departamento(fila['nombre'], fila['gerente_id'], fila['id_departamento'])
         except Exception as e:
             print(f"Error al obtener el departamento: {e}")
         finally:
@@ -61,8 +61,8 @@ class DepartamentoDAO:
         try:
             cursor: Cursor = conn.cursor()
             cursor.execute(
-                "UPDATE departamento SET nombre = ?, gerente = ? WHERE id_departamento = ?",
-                (departamento.nombre, departamento.gerente, departamento.id_departamento)
+                "UPDATE departamento SET nombre = ?, gerente_id = ? WHERE id_departamento = ?",
+                (departamento.nombre, departamento.gerente_id, departamento.id_departamento)
             )
             conn.commit()
             return cursor.rowcount > 0

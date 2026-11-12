@@ -21,7 +21,11 @@ class EmpleadoView:
         print("\n--- Agregar Nuevo Empleado ---")
         rut = input("Ingrese el RUT del empleado: ")
         nombre = leer_texto("Ingrese el nombre del empleado: ")
-        apellido = leer_texto("Ingrese el apellido del empleado: ")
+        apellido_paterno = leer_texto("Ingrese el apellido paterno del empleado: ")
+        apellido_materno = leer_texto("Ingrese el apellido materno del empleado: ")
+        edad = leer_numero("Ingrese la edad del empleado: ")
+        direccion = leer_texto("Ingrese la dirección del empleado: ")
+        telefono = input("Ingrese el teléfono del empleado: ")
         correo = input("Ingrese el correo electrónico: ")
         return {
             "rut": rut,

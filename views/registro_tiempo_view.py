@@ -22,10 +22,14 @@ class RegistroTiempoView:
         fecha = input("Ingrese la fecha (YYYY-MM-DD): ")
         hora = input("Ingrese la hora (HH:MM): ")
         descripcion = leer_texto("Ingrese la descripción: ")
+        id_empleado = leer_numero("Ingrese el ID del empleado: ")
+        id_proyecto = leer_numero("Ingrese el ID del proyecto: ")
         return {
             "fecha": fecha,
             "hora": hora,
-            "descripcion": descripcion
+            "descripcion": descripcion,
+            "id_empleado": id_empleado,
+            "id_proyecto": id_proyecto
         }
 
     @staticmethod
@@ -69,7 +73,9 @@ class RegistroTiempoView:
             "id_registro": registro.id_registro,
             "fecha": nueva_fecha,
             "hora": nueva_hora,
-            "descripcion": nueva_desc
+            "descripcion": nueva_desc,
+            "id_empleado": registro.id_empleado,
+            "id_proyecto": registro.id_proyecto
         }
 
     @staticmethod

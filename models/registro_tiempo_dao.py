@@ -9,8 +9,8 @@ class RegistroTiempoDAO:
         try:
             cursor: Cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO registro_tiempo (fecha, hora, descripcion) VALUES (?, ?, ?)",
-                (registro.fecha, registro.hora, registro.descripcion)
+                "INSERT INTO registro_tiempo (fecha, hora, descripcion, id_empleado, id_proyecto) VALUES (?, ?, ?, ?, ?)",
+                (registro.fecha, registro.hora, registro.descripcion, registro.id_empleado, registro.id_proyecto)
             )
             conn.commit()
             registro.id_registro = cursor.lastrowid
@@ -27,10 +27,17 @@ class RegistroTiempoDAO:
         registros = []
         try:
             cursor: Cursor = conn.cursor()
-            cursor.execute("SELECT id_registro, fecha, hora, descripcion FROM registro_tiempo")
+            cursor.execute("SELECT id_registro, fecha, hora, descripcion, id_empleado, id_proyecto FROM registro_tiempo")
             filas = cursor.fetchall()
             for fila in filas:
-                registros.append(RegistroTiempo(fila['fecha'], fila['hora'], fila['descripcion'], fila['id_registro']))
+                registros.append(RegistroTiempo(
+                    fecha=fila['fecha'],
+                    hora=fila['hora'],
+                    descripcion=fila['descripcion'],
+                    id_registro=fila['id_registro'],
+                    id_empleado=fila['id_empleado'],
+                    id_proyecto=fila['id_proyecto']
+                ))
         except Exception as e:
             print(f"Error al obtener registros de tiempo: {e}")
         finally:
@@ -43,10 +50,17 @@ class RegistroTiempoDAO:
         registro = None
         try:
             cursor: Cursor = conn.cursor()
-            cursor.execute("SELECT id_registro, fecha, hora, descripcion FROM registro_tiempo WHERE id_registro = ?", (id_registro,))
+            cursor.execute("SELECT id_registro, fecha, hora, descripcion, id_empleado, id_proyecto FROM registro_tiempo WHERE id_registro = ?", (id_registro,))
             fila = cursor.fetchone()
             if fila:
-                registro = RegistroTiempo(fila['fecha'], fila['hora'], fila['descripcion'], fila['id_registro'])
+                registro = RegistroTiempo(
+                    fecha=fila['fecha'],
+                    hora=fila['hora'],
+                    descripcion=fila['descripcion'],
+                    id_registro=fila['id_registro'],
+                    id_empleado=fila['id_empleado'],
+                    id_proyecto=fila['id_proyecto']
+                )
         except Exception as e:
             print(f"Error al obtener el registro de tiempo: {e}")
         finally:
@@ -61,8 +75,8 @@ class RegistroTiempoDAO:
         try:
             cursor: Cursor = conn.cursor()
             cursor.execute(
-                "UPDATE registro_tiempo SET fecha = ?, hora = ?, descripcion = ? WHERE id_registro = ?",
-                (registro.fecha, registro.hora, registro.descripcion, registro.id_registro)
+                "UPDATE registro_tiempo SET fecha = ?, hora = ?, descripcion = ?, id_empleado = ?, id_proyecto = ? WHERE id_registro = ?",
+                (registro.fecha, registro.hora, registro.descripcion, registro.id_empleado, registro.id_proyecto, registro.id_registro)
             )
             conn.commit()
             return cursor.rowcount > 0

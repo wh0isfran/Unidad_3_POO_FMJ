@@ -1,7 +1,7 @@
 from views.main_view import MainView
 from controllers.empleado_controller import EmpleadoController
 from controllers.departamento_controller import DepartamentoController
-from controllers.admin_rrhh_controller import Admin_rrhhController 
+from controllers.admin_rrhh_controller import AdminRrhhController 
 from controllers.informe_controller import InformeController
 from controllers.registro_tiempo_controller import RegistroTiempoController
 from controllers.proyecto_controller import ProyectoController
@@ -10,7 +10,7 @@ from controllers.reporte_horas_controller import ReporteHorasController
 class MainController:
     def __init__(self, usuario_actual=None):
         self.view = MainView()
-        self.admin_rrhh_controller = Admin_rrhhController()
+        self.admin_rrhh_controller = AdminRrhhController()
         self.departamento_controller = DepartamentoController()
         self.empleado_controller = EmpleadoController()
         self.proyecto_controller = ProyectoController()
