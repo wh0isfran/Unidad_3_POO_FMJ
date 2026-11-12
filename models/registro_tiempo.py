@@ -1,10 +1,5 @@
 from datetime import datetime
 
-try:
-    datetime.strptime(self.fecha, "%Y-%m-%d")
-except (ValueError, TypeError):
-    raise ValueError("La fecha debe tener formato YYYY-MM-DD.")
-
 class RegistroTiempo:
     def __init__(self, fecha: str, hora: str, descripcion: str, id_empleado: int, id_proyecto: int, id_registro: int = None):
         self.id_registro = id_registro
@@ -22,19 +17,19 @@ class RegistroTiempo:
 
     @fecha.setter
     def fecha(self, value: str):
-        from datetime import datetime
-
         try:
             datetime.strptime(value, "%Y-%m-%d")
         except (ValueError, TypeError):
             raise ValueError("La fecha debe tener formato YYYY-MM-DD.")
-
+        
         self._fecha = value
 
+    @property
+    def fecha_generacion(self) -> str:
+        return self._fecha_generacion
+    
     @fecha_generacion.setter
     def fecha_generacion(self, value: str):
-        from datetime import datetime
-
         try:
             datetime.strptime(value, "%Y-%m-%d")
         except (ValueError, TypeError):
@@ -44,6 +39,10 @@ class RegistroTiempo:
 
         self._fecha_generacion = value
 
+    @property
+    def periodo_mes(self) -> str:
+        return self._periodo_mes
+    
     @periodo_mes.setter
     def periodo_mes(self, value: str):
         from datetime import datetime

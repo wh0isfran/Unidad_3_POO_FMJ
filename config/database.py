@@ -112,8 +112,6 @@ class Database:
                     fecha DATE NOT NULL,
                     periodo_mes TEXT NOT NULL,
                     fecha_generacion TEXT NOT NULL,
-                    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado) ON DELETE CASCADE,
-                    FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto) ON DELETE CASCADE
                 )
             """)
 

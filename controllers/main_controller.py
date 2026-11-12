@@ -7,6 +7,7 @@ from controllers.informe_controller import InformeController
 from controllers.registro_tiempo_controller import RegistroTiempoController
 from controllers.proyecto_controller import ProyectoController
 from controllers.reporte_horas_controller import ReporteHorasController
+from views.reporte_horas_view import ReporteHorasView 
 from models.usuario import Usuario
 
 
@@ -20,7 +21,7 @@ class MainController:
         self.proyecto_controller = ProyectoController()
         self.registro_tiempo_controller = RegistroTiempoController()
         self.informe_controller = InformeController()
-        self.reporte_horas_controller = ReporteHorasController()
+        self.reporte_horas_controller = ReporteHorasController(ReporteHorasView())
         self.usuario_actual: Usuario | None = None
 
     def ejecutar(self) -> None:
