@@ -9,8 +9,9 @@ from controllers.proyecto_controller import ProyectoController
 from controllers.reporte_horas_controller import ReporteHorasController
 from models.usuario import Usuario
 
+
 class MainController:
-    def __init__(self, usuario_actual=None):
+    def __init__(self):
         self.view = MainView()
         self.auth_controller = AuthController()
         self.admin_rrhh_controller = AdminRrhhController()
@@ -23,13 +24,14 @@ class MainController:
         self.usuario_actual: Usuario | None = None
 
     def ejecutar(self) -> None:
+        
         self.usuario_actual = self.auth_controller.iniciar_sesion()
         if not self.usuario_actual:
             self.view.mostrar_mensaje("El programa ha finalizado debido a credenciales inválidas.")
             return
-                
+
         while True:
-            opcion = self.view.mostrar_menu() 
+            opcion = self.view.mostrar_menu(self.usuario_actual)
             if opcion == 1:
                 self.admin_rrhh_controller.ejecutar()
             elif opcion == 2:
@@ -53,7 +55,7 @@ class MainController:
                     self.view.mostrar_mensaje("El programa ha finalizado debido a credenciales inválidas.")
                     break
             elif opcion == 0:
-                self.view.mostrar_mensaje("Gracias por usar el sistema de la Clínica. ¡Hasta luego!")
+                self.view.mostrar_mensaje("Gracias por usar el sistema de la Empresa. ¡Hasta luego!")
                 break
             else:
                 self.view.mostrar_mensaje("Opción no válida. Por favor, intente nuevamente.")

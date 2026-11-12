@@ -2,12 +2,16 @@ from views.utils import leer_numero, confirmar
 from models.usuario import Usuario
 
 class AuthView:
+    """
+    Vista de consola para el Inicio de Sesión y la Gestión de Usuarios con Credenciales Encriptadas.
+    """
+
     @staticmethod
     def mostrar_banner_login(intento_actual: int, max_intentos: int) -> None:
         print("\n" + "=" * 55)
-        print("   ECHOTECH SOLUTIONS - INICIO DE SESIÓN SEGURO (SHA-256)")
+        print("   CLÍNICA SANITARIA - INICIO DE SESIÓN SEGURO (SHA-256)")
         print("=" * 55)
-        print(f"Intento {intento_actual} de {max_intentos} (Por defecto: admin / admin1234)")
+        print(f"Intento {intento_actual} de {max_intentos} (Por defecto: admin / admin4321)")
         print("-" * 55)
 
     @staticmethod
@@ -46,9 +50,9 @@ class AuthView:
         clave = input("Ingrese contraseña (mín. 4 caracteres, se encriptará con SHA-256): ").strip()
         confirmacion = input("Confirme la contraseña: ").strip()
 
-        print("Roles disponibles: 1.- Administrador de RRHH, 2.- Empleado")
-        opcion_rol = leer_numero("Seleccione un rol (1-2): ")
-        mapa_roles = {1: "Administrador de RRHH", 2: "Empleado"}
+        print("Roles disponibles: 1.- Administrador RRHH, 2.- Empleado, 3.- Operador")
+        opcion_rol = leer_numero("Seleccione un rol (1-3): ")
+        mapa_roles = {1: "Administrador RRHH", 2: "Empleado", 3: "Operador"}
         rol = mapa_roles.get(opcion_rol, "")
 
         return {

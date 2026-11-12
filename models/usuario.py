@@ -3,14 +3,15 @@ import hmac
 import re
 
 class Usuario:
-    ROLES: set[str] = {"Administrador de Recursos Humanos", "Empleado"}
+
+    ROLES: set[str] = {"Administrador RRHH", "Empleado", "Operador"}
 
     def __init__(
         self,
         username: str,
         password_hash: str,
         nombre_completo: str,
-        rol: str = "Administrador RRHH",
+        rol: str = "Operador",
         id_usuario: int | None = None
     ):
         self.id_usuario = id_usuario
@@ -73,6 +74,10 @@ class Usuario:
 
     @staticmethod
     def encriptar_credencial(clave_plana: str) -> str:
+        """
+        Valida que la contraseña en texto plano no esté vacía ni sea demasiado corta,
+        y retorna su representación encriptada mediante el algoritmo criptográfico SHA-256.
+        """
         if not isinstance(clave_plana, str) or not clave_plana.strip():
             raise ValueError("La contraseña no puede estar vacía ni contener solo espacios.")
         clave_limpia = clave_plana.strip()
@@ -82,6 +87,10 @@ class Usuario:
 
     @staticmethod
     def validar_credenciales_ingreso(username: str, clave_plana: str) -> tuple[bool, str]:
+        """
+        Valida las credenciales ingresadas por el usuario antes de procesar el login,
+        evitando valores vacíos o con formato incorrecto.
+        """
         if not isinstance(username, str) or not username.strip():
             return (False, "El campo 'Usuario' no puede estar vacío.")
         if not isinstance(clave_plana, str) or not clave_plana.strip():
@@ -100,6 +109,10 @@ class Usuario:
         return (True, "Formato de credenciales válido.")
 
     def verificar_credencial(self, clave_ingresada: str) -> bool:
+        """
+        Compara la contraseña ingresada (en texto plano) con el hash encriptado del usuario
+        utilizando comparación en tiempo constante para mitigar ataques de temporización.
+        """
         if not isinstance(clave_ingresada, str) or not clave_ingresada.strip():
             return False
         try:

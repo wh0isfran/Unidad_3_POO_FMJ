@@ -4,6 +4,7 @@ from models.usuario_dao import UsuarioDAO
 from views.auth_view import AuthView
 
 class AuthController:
+
     def __init__(self):
         self.view = AuthView()
 
@@ -17,13 +18,13 @@ class AuthController:
             username = credenciales["username"]
             clave = credenciales["clave"]
 
-         
+            
             es_valido, mensaje_validacion = Usuario.validar_credenciales_ingreso(username, clave)
             if not es_valido:
                 self.view.mostrar_error(f"Validación fallida: {mensaje_validacion}")
                 continue
 
-           
+            
             usuario_bd = UsuarioDAO.obtener_por_username(username)
             if usuario_bd is not None and usuario_bd.verificar_credencial(clave):
                 self.view.mostrar_bienvenida(usuario_bd)
