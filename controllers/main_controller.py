@@ -36,8 +36,14 @@ class MainController:
                 self.informe_controller.ejecutar()
             elif opcion == 7:
                 self.reporte_horas_controller.ejecutar()
+            elif opcion == 9:
+                self.view.mostrar_mensaje(f"Cerrando sesión de '{self.usuario_actual.username}'...")
+                self.usuario_actual = self.auth_controller.iniciar_sesion()
+                if not self.usuario_actual:
+                    self.view.mostrar_mensaje("El programa ha finalizado debido a credenciales inválidas.")
+                    break
             elif opcion == 0:
-                self.view.mostrar_mensaje("Saliendo del Sistema de Echotech Solutions. ¡Hasta luego!")
+                self.view.mostrar_mensaje("Gracias por usar el sistema de la Clínica. ¡Hasta luego!")
                 break
             else:
                 self.view.mostrar_mensaje("Opción no válida. Por favor, intente nuevamente.")
