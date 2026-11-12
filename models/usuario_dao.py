@@ -119,10 +119,6 @@ class UsuarioDAO:
 
     @classmethod
     def inicializar_admin_por_defecto(cls) -> None:
-        """
-        Si la tabla está vacía, crea un usuario Administrador inicial con su
-        contraseña encriptada (SHA-256) a partir de la configuración del entorno.
-        """
         usuarios_existentes = cls.obtener_todos()
         if not usuarios_existentes:
             try:

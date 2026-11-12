@@ -16,6 +16,6 @@ class Settings:
 
 
     ADMIN_INITIAL_USER: str = os.getenv("ADMIN_INITIAL_USER", "admin")
-    ADMIN_INITIAL_CLAVE: str = os.getenv("ADMIN_INITIAL_CLAVE", "admin1234")
+    ADMIN_INITIAL_CLAVE: str = os.getenv("ADMIN_INITIAL_CLAVE", "admin4321")
     MAX_LOGIN_ATTEMPTS: int = int(os.getenv("MAX_LOGIN_ATTEMPTS", "3"))
 

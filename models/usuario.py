@@ -10,7 +10,7 @@ class Usuario:
         username: str,
         password_hash: str,
         nombre_completo: str,
-        rol: str = "Administrador de Recursos Humanos",
+        rol: str = "Administrador RRHH",
         id_usuario: int | None = None
     ):
         self.id_usuario = id_usuario
