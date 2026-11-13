@@ -1,11 +1,15 @@
 from models.admin_rrhh import AdminRRHH
 from models.admin_rrhh_dao import AdminRrhhDAO
 from views.admin_rrhh_view import AdminRrhhView
+from models.usuario import Usuario
+from models.usuario_dao import UsuarioDAO 
 
 class AdminRrhhController:
     def __init__(self):
         self.view = AdminRrhhView()
         self.AdminRrhhDAO = AdminRrhhDAO() 
+        self.usuario_dao = UsuarioDAO()
+        self.view = AdminRrhhView()
 
     def ejecutar(self) -> None:
         while True:
@@ -29,13 +33,25 @@ class AdminRrhhController:
     def agregar_admin_rrhh(self) -> None:
         datos = self.view.formulario_nuevo_admin()
         try:
-            nuevo_admin_rrhh = AdminRRHH(datos['nombre'], datos['apellido_paterno'], datos['apellido_materno'], id_admin=datos.get('id_admin'))
-            exito = AdminRrhhDAO.crear(nuevo_admin_rrhh) 
+            nombre_completo = f"{datos['nombre']} {datos['apellido_paterno']} {datos['apellido_materno']}"
+
+            nuevo_usuario = Usuario(username=datos['username'], password_hash=Usuario.encriptar_credencial(datos['password']), nombre_completo=nombre_completo, rol="Administrador RRHH")
+            usuario_creado = UsuarioDAO.crear(nuevo_usuario)
+
+            if not usuario_creado:
+                self.view.mostrar_mensaje("Error al crear la cuenta de usuario.")
+                return
+
+            nuevo_admin_rrhh = AdminRRHH(datos['nombre'], datos['apellido_paterno'], datos['apellido_materno'], id_admin=datos.get('id_admin'), id_usuario=nuevo_usuario.id_usuario)
+
+            exito = AdminRrhhDAO.crear(nuevo_admin_rrhh)
+
             if exito:
                 self.view.mostrar_mensaje(f"Administrador agregado exitosamente con ID {nuevo_admin_rrhh.id_admin}.")
             else:
-                self.view.mostrar_mensaje(f"Error al guardar en base de datos.")
-        except (ValueError, TypeError) as e:
+                self.view.mostrar_mensaje("Error al guardar en base de datos.")
+
+        except (ValueError, TypeError, KeyError) as e:
             self.view.mostrar_mensaje(f"Error en los datos ingresados: {e}")
             
         

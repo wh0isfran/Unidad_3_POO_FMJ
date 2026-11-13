@@ -85,3 +85,51 @@ class DepartamentoDAO:
             return False
         finally:
             conn.close()
+
+
+    @staticmethod
+    def buscar_gerente_por_nombre(nombre: str):
+        conn = Database().get_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute(
+                """
+                SELECT id_empleado, nombre,
+                    apellido_paterno, apellido_materno
+                FROM empleado
+                WHERE LOWER(TRIM(nombre)) = LOWER(TRIM(?))
+                OR LOWER(TRIM(
+                    nombre || ' ' || apellido_paterno || ' ' ||
+                    apellido_materno
+                )) = LOWER(TRIM(?))
+                """,
+                (nombre, nombre)
+            )
+
+            return cursor.fetchall()
+
+        finally:
+            conn.close()
+
+    @staticmethod
+    def existe_nombre(nombre: str) -> bool:
+        conn = Database().get_connection()
+
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute(
+                """
+                SELECT 1 FROM departamento
+                WHERE LOWER(TRIM(nombre)) = LOWER(TRIM(?))
+                LIMIT 1
+                """,
+                (nombre,)
+            )
+
+            return cursor.fetchone() is not None
+
+        finally:
+            conn.close()

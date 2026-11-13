@@ -111,7 +111,7 @@ class Database:
                     horas_trabajadas REAL NOT NULL,
                     fecha DATE NOT NULL,
                     periodo_mes TEXT NOT NULL,
-                    fecha_generacion TEXT NOT NULL,
+                    fecha_generacion TEXT NOT NULL
                 )
             """)
 

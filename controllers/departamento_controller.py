@@ -25,37 +25,58 @@ class DepartamentoController:
             else:
                 self.view.mostrar_mensaje("Opción no válida.")
 
+
     def agregar_departamento(self) -> None:
         datos = self.view.formulario_nuevo_departamento()
+
         try:
-            nuevo_departamento = Departamento(datos['nombre'], datos['gerente'])
+            while DepartamentoDAO.existe_nombre(datos['nombre']):
+                self.view.mostrar_mensaje(
+                    f"El departamento '{datos['nombre']}' ya existe."
+                )
+
+                datos['nombre'] = input(
+                    "Ingrese otro nombre de departamento: "
+                ).strip()
+                
+            gerentes = DepartamentoDAO.buscar_gerente_por_nombre(
+                datos['gerente']
+            )
+
+            if not gerentes:
+                self.view.mostrar_mensaje(
+                    "No se encontró un empleado con ese nombre."
+                )
+                return
+
+            if len(gerentes) > 1:
+                self.view.mostrar_mensaje(
+                    "Existen varios empleados con ese nombre."
+                )
+                return
+
+            gerente_id = gerentes[0][0]
+
+            nuevo_departamento = Departamento(
+                datos['nombre'],
+                gerente_id
+            )
+
             exito = DepartamentoDAO.crear(nuevo_departamento)
+
             if exito:
-                self.view.mostrar_mensaje(f"Departamento agregado exitosamente con ID {nuevo_departamento.id_departamento}.")
+                self.view.mostrar_mensaje(
+                    f"Departamento agregado exitosamente con ID {nuevo_departamento.id_departamento}."
+                )
             else:
-                self.view.mostrar_mensaje("Error al guardar en la base de datos.")
+                self.view.mostrar_mensaje(
+                    "Error al guardar en la base de datos."
+                )
+
         except (ValueError, TypeError) as e:
-            self.view.mostrar_mensaje(f"Error en los datos ingresados: {e}")
-
-    def editar_departamento(self) -> None:
-        id_depto = self.view.solicitar_id()
-        departamento = DepartamentoDAO.obtener_por_id(id_depto)
-        if not departamento:
-            self.view.mostrar_mensaje("Departamento no encontrado.")
-            return
-
-        datos_nuevos = self.view.formulario_editar_departamento(departamento)
-        try:
-            departamento.nombre = datos_nuevos['nombre']
-            departamento.gerente = datos_nuevos['gerente']
-
-            exito = DepartamentoDAO.actualizar(departamento)
-            if exito:
-                self.view.mostrar_mensaje("Departamento actualizado exitosamente.")
-            else:
-                self.view.mostrar_mensaje("Error al actualizar en la base de datos.")
-        except (ValueError, TypeError) as e:
-            self.view.mostrar_mensaje(f"Error en los datos modificados: {e}")
+            self.view.mostrar_mensaje(
+                f"Error en los datos ingresados: {e}"
+            )
 
     def eliminar_departamento(self) -> None:
         id_depto = self.view.solicitar_id()

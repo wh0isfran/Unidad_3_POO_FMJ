@@ -1,9 +1,24 @@
 class AdminRRHH: 
-    def __init__(self, nombre: str, apellido_paterno: str, apellido_materno: str, id_admin: int | None = None):
+    def __init__(self, nombre: str, apellido_paterno: str, apellido_materno: str, id_admin: int, id_usuario: int | None = None):
         self.id_admin = id_admin
+        self.id_usuario = id_usuario
         self.nombre = nombre
         self.apellido_paterno = apellido_paterno
         self.apellido_materno = apellido_materno
+
+    @property
+    def id_usuario(self) -> int | None:
+        return self._id_usuario
+
+    @id_usuario.setter
+    def id_usuario(self, valor: int | None) -> None:
+        if valor is not None:
+            if type(valor) is not int or valor <= 0:
+                raise ValueError(
+                    "El ID de usuario debe ser un número entero positivo."
+                )
+
+        self._id_usuario = valor
 
     @property
     def nombre(self) -> str:

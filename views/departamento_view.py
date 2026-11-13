@@ -20,7 +20,7 @@ class DepartamentoView:
     def formulario_nuevo_departamento() -> dict:
         print("\n--- Agregar Nuevo Departamento ---")
         nombre = leer_texto("Ingrese el nombre del departamento: ")
-        gerente = leer_numero("Ingrese el ID del gerente: ")
+        gerente = leer_texto("Ingrese el nombre del gerente: ")
         return {
             "nombre": nombre,
             "gerente": gerente
@@ -55,11 +55,11 @@ class DepartamentoView:
         if not nuevo_nombre.strip():
             nuevo_nombre = departamento.nombre
 
-        nuevo_gerente_input = input(f"Gerente actual ({departamento.gerente}): ")
+        nuevo_gerente_input = input(f"Gerente actual ({departamento.gerente_id}): ")
         try:
-            nuevo_gerente = int(nuevo_gerente_input) if nuevo_gerente_input.strip() else departamento.gerente
+            nuevo_gerente = int(nuevo_gerente_input) if nuevo_gerente_input.strip() else departamento.gerente_id
         except ValueError:
-            nuevo_gerente = departamento.gerente
+            nuevo_gerente = departamento.gerente_id
 
         return {
             "id_departamento": departamento.id_departamento,

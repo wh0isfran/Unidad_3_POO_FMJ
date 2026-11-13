@@ -15,7 +15,7 @@ class MainView:
         print("4.- Gestión de Proyectos")
         print("5.- Gestión de Registros de Tiempo")
         print("6.- Gestión de Informes")
-        print("7.- Reporte de horas trabajadas (Consumo de API)(SIMULACIÓN)")
+        print("7.- Cambio de Moneda (USD/CLP)-(Consumo de API)")
         print("8.- Gestión de usuarios (credenciales encriptadas)")
         print("9.- Cerrar sesión (cambiar de usuario)")
         print("0.- Salir del Sistema")

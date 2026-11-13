@@ -1,4 +1,5 @@
 from views.utils import leer_numero, confirmar
+from getpass import getpass
 from models.admin_rrhh import AdminRRHH 
 
 class AdminRrhhView:
@@ -23,11 +24,17 @@ class AdminRrhhView:
         nombre = input("Ingrese el nombre: ")
         apellido_paterno = input("Ingrese el apellido paterno: ")
         apellido_materno = input("Ingrese el apellido materno: ")
+        username = input("Ingrese el nombre de usuario: ")
+        password = getpass("Ingrese la contraseña: ")
+
+
 
         return {
             "nombre": nombre,
             "apellido_paterno": apellido_paterno,
-            "apellido_materno": apellido_materno
+            "apellido_materno": apellido_materno,
+            "username": username,
+            "password": password
         }
 
     @staticmethod
@@ -67,11 +74,16 @@ class AdminRrhhView:
         if not nuevo_apellido_materno.strip():
             nuevo_apellido_materno = admin_rrhh.apellido_materno
 
+        nueva_password = getpass(f"Contraseña actual (oculta): ")
+        if not nueva_password:
+            nueva_password = admin_rrhh.password
+
         return {
             "id_admin": admin_rrhh.id_admin,
             "nombre": nuevo_nombre,
             "apellido_paterno": nuevo_apellido_paterno,
-            "apellido_materno": nuevo_apellido_materno
+            "apellido_materno": nuevo_apellido_materno,
+            "password": nueva_password
         }
 
     @staticmethod

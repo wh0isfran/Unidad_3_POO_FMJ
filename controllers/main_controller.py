@@ -6,8 +6,7 @@ from controllers.admin_rrhh_controller import AdminRrhhController
 from controllers.informe_controller import InformeController
 from controllers.registro_tiempo_controller import RegistroTiempoController
 from controllers.proyecto_controller import ProyectoController
-from controllers.reporte_horas_controller import ReporteHorasController
-from views.reporte_horas_view import ReporteHorasView 
+from controllers.cambio_moneda_controller import CambioMonedaController
 from models.usuario import Usuario
 
 
@@ -21,7 +20,7 @@ class MainController:
         self.proyecto_controller = ProyectoController()
         self.registro_tiempo_controller = RegistroTiempoController()
         self.informe_controller = InformeController()
-        self.reporte_horas_controller = ReporteHorasController(ReporteHorasView())
+        self.cambio_moneda_controller = CambioMonedaController()
         self.usuario_actual: Usuario | None = None
 
     def ejecutar(self) -> None:
@@ -46,7 +45,7 @@ class MainController:
             elif opcion == 6:
                 self.informe_controller.ejecutar()
             elif opcion == 7:
-                self.reporte_horas_controller.ejecutar()
+                self.cambio_moneda_controller.ejecutar()
             elif opcion == 8:
                 self.auth_controller.ejecutar(self.usuario_actual)
             elif opcion == 9:
