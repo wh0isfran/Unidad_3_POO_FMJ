@@ -54,7 +54,7 @@ class Database:
                     edad INTEGER NOT NULL,
                     direccion TEXT NOT NULL,
                     telefono TEXT NOT NULL,
-                    correo TEXT NOT NULL,
+                    correo TEXT NOT NULL UNIQUE,
                     id_departamento INTEGER,
                     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
                     FOREIGN KEY (id_departamento) REFERENCES departamento(id_departamento) ON DELETE CASCADE
@@ -100,18 +100,6 @@ class Database:
                     titulo TEXT NOT NULL,
                     fecha DATE NOT NULL,
                     contenido TEXT NOT NULL
-                )
-            """)
-
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS reporte_horas (
-                    id_reporte INTEGER PRIMARY KEY AUTOINCREMENT,
-                    id_empleado INTEGER NOT NULL,
-                    id_proyecto INTEGER NOT NULL,
-                    horas_trabajadas REAL NOT NULL,
-                    fecha DATE NOT NULL,
-                    periodo_mes TEXT NOT NULL,
-                    fecha_generacion TEXT NOT NULL
                 )
             """)
 

@@ -1,0 +1,234 @@
+=================================================================================================================================================================================================
+
+### 1.- Código generado por IA:
+
+## 1.1.- Le solicité que me diera el código de la clase "Departamento", el resultado entregado fue el siguiente: 
+
+class Departamento:
+
+    def __init__(self, id_departamento, nombre, descripcion):
+        self.id_departamento = id_departamento
+        self.nombre = nombre
+        self.descripcion = descripcion
+
+    def mostrar_informacion(self):
+        return (
+            f"ID: {self.id_departamento}\n"
+            f"Nombre: {self.nombre}\n"
+            f"Descripción: {self.descripcion}"
+        )
+
+    def actualizar_nombre(self, nuevo_nombre):
+        self.nombre = nuevo_nombre
+
+    def actualizar_descripcion(self, nueva_descripcion):
+        self.descripcion = nueva_descripcion
+
+## 1.2.- Le solicité: "dame el codigo de la class Database: teniendo en cuenta las siguientes tablas: usuario, departamento, empleado,  proyecto, admin_rrhh, registro_tiempo, informe", me entregó lo siguiente:
+
+import sqlite3
+
+
+class Database:
+
+    def __init__(self, db_name="gestion_empresa.db"):
+        self.db_name = db_name
+
+    def conectar(self):
+        try:
+            conexion = sqlite3.connect(self.db_name)
+            conexion.execute("PRAGMA foreign_keys = ON")
+            conexion.row_factory = sqlite3.Row
+            return conexion
+
+        except sqlite3.Error as error:
+            print(f"Error de conexión: {error}")
+            raise
+
+    def crear_tablas(self):
+        conexion = self.conectar()
+
+        try:
+            cursor = conexion.cursor()
+
+            # TABLA USUARIO
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS usuario (
+                    id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre TEXT NOT NULL,
+                    correo TEXT NOT NULL UNIQUE,
+                    contrasena_hash TEXT NOT NULL,
+                    rol TEXT NOT NULL
+                )
+            """)
+
+            # TABLA DEPARTAMENTO
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS departamento (
+                    id_departamento INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre TEXT NOT NULL UNIQUE,
+                    descripcion TEXT
+                )
+            """)
+
+            # TABLA EMPLEADO
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS empleado (
+                    id_empleado INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_usuario INTEGER NOT NULL UNIQUE,
+                    id_departamento INTEGER NOT NULL,
+                    cargo TEXT NOT NULL,
+
+                    FOREIGN KEY (id_usuario)
+                        REFERENCES usuario(id_usuario),
+
+                    FOREIGN KEY (id_departamento)
+                        REFERENCES departamento(id_departamento)
+                )
+            """)
+
+            # TABLA PROYECTO
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS proyecto (
+                    id_proyecto INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre TEXT NOT NULL,
+                    descripcion TEXT,
+                    fecha_inicio TEXT NOT NULL,
+                    fecha_fin TEXT,
+                    estado TEXT NOT NULL
+                )
+            """)
+
+            # TABLA ADMIN RRHH
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS admin_rrhh (
+                    id_admin INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_usuario INTEGER NOT NULL UNIQUE,
+
+                    FOREIGN KEY (id_usuario)
+                        REFERENCES usuario(id_usuario)
+                )
+            """)
+
+            # TABLA REGISTRO TIEMPO
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS registro_tiempo (
+                    id_registro INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_empleado INTEGER NOT NULL,
+                    id_proyecto INTEGER NOT NULL,
+                    fecha TEXT NOT NULL,
+                    horas_trabajadas REAL NOT NULL
+                        CHECK (horas_trabajadas > 0),
+                    descripcion TEXT,
+
+                    FOREIGN KEY (id_empleado)
+                        REFERENCES empleado(id_empleado),
+
+                    FOREIGN KEY (id_proyecto)
+                        REFERENCES proyecto(id_proyecto)
+                )
+            """)
+
+            # TABLA INFORME
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS informe (
+                    id_informe INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_empleado INTEGER NOT NULL,
+                    periodo TEXT NOT NULL,
+                    total_horas REAL NOT NULL
+                        CHECK (total_horas >= 0),
+                    fecha_generacion TEXT NOT NULL,
+
+                    FOREIGN KEY (id_empleado)
+                        REFERENCES empleado(id_empleado)
+                )
+            """)
+
+            conexion.commit()
+            print("Tablas creadas correctamente.")
+
+        except sqlite3.Error as error:
+            conexion.rollback()
+            print(f"Error al crear las tablas: {error}")
+            raise
+
+        finally:
+            conexion.close()
+
+    def ejecutar_consulta(self, consulta, parametros=()):
+        conexion = self.conectar()
+
+        try:
+            cursor = conexion.cursor()
+            cursor.execute(consulta, parametros)
+            conexion.commit()
+            return cursor.lastrowid
+
+        except sqlite3.Error as error:
+            conexion.rollback()
+            print(f"Error al ejecutar consulta: {error}")
+            raise
+
+        finally:
+            conexion.close()
+
+    def obtener_datos(self, consulta, parametros=()):
+        conexion = self.conectar()
+
+        try:
+            cursor = conexion.cursor()
+            cursor.execute(consulta, parametros)
+            return cursor.fetchall()
+
+        except sqlite3.Error as error:
+            print(f"Error al obtener datos: {error}")
+            raise
+
+        finally:
+            conexion.close()
+
+
+================================================================================================================================================================================================= 
+
+### 2.- Análisis Código generado:
+
+## 2.1.- Análisis "class Departamento": A diferencia del formato de mi código en clase Departamento (orientado por el ejemplo entregado por el docente), 
+el entregado por la IA carece de validaciones, por ejemplo, no valida si el nombre está vacío,
+no comprueba si el departamento ingresado por el usuario ya existe o si los valores ingresados son numéricos y no texto.
+
+## 2.2.- Análisis de "class Database": 
+La diferencia a la implementada en mi código no es tan grande, pero cabe destacar que la entregada por la IA integra una función nueva: PRAGMA foreign_keys = ON, 
+la cual evita que se registren datos relacionados  con tablas inexistentes, la que le indica a SQLite que compruebe las relaciones definidas entre tablas  mediante
+las FOREIGN_KEYS.
+
+=================================================================================================================================================================================================
+
+### 3.- Identificación errores o vulnerabilidades:
+
+## 3.1.- "class Departamento" - IA: Permite modificar atributos sin realizar validaciones correctamente y no incluye detección de condiciones
+que provocan excepciones (if not insistance) o lanzar un excepción cuando una validación falla (raise).
+
+## 3.2.- "class Database" - IA: el código entregado por la IA presenta manejo de excepciones, al igual que mi código (uso de except sqlite3.Error as error).
+
+=================================================================================================================================================================================================
+
+### 4.- Ajuste de Código (criterios técnicos):
+
+## 4.1- "class Departamento": para que el código generado y entregado por la IA cumpla con lo requerido para ésta evaluación, es importante que se agrege el uso de excepciones; 
+otro punto importante que puedo notar a simple vista es el diseño, ya que no entrega "setter" ni "@property" de cada parámetro necesario en la clase (id_departamento, nombre, descripcion),
+solo entrega definiciones (def). 
+
+## 4.2.- "class Database": Para que el código entregado por la IA sea más acorde a lo visto en clases y  tomando en cuenta el ejercicio, def __new__(cls) debe implementarse al inicio y luego ya
+la implementación del init_db junto con las tablas requeridas.
+
+=================================================================================================================================================================================================
+
+### 5.- Justificación decisiones adoptadas:
+
+## 5.1.- "class Departamento": Decidí conservar lo planteado en mi código, el cual fue orientado por el ejemplo entregado en clases (farmacia), ya que se guía más por lo evaluado 
+en este trabajo.
+
+## 5.2.- "class Database": Decidí incluir "PRAGMA foreign_keys = ON" a mi código, ya que ayudará a darle una mayor robuztes a la bd. En cuanto a lo demás preferí no cambiarlo por lo 
+entregado por la IA, ya que no quiero arriesgar algo que ya funciona.
+
+=================================================================================================================================================================================================
