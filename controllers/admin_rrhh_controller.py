@@ -21,15 +21,27 @@ class AdminRrhhController:
             elif opcion == 3:
                 self.eliminar_admin_rrhh()
             elif opcion == 4:
-                self.imprimir_admin_rrhh()
+                self.ver_admin_rrhh()
             elif opcion == 5:
-                self.imprimir_admin_rrhh()
+                self.listar_admin_rrhh()
             elif opcion == 0:
                 self.view.mostrar_mensaje("Saliendo de la gestión de Administradores de RRHH.")
                 break
             else:
                 self.view.mostrar_mensaje("Opción no válida.")
-    
+
+    def ver_admin_rrhh(self) -> None:
+        id_admin = self.view.solicitar_id()
+        admin_rrhh = AdminRrhhDAO.obtener_por_id(id_admin)
+        if admin_rrhh:
+            self.view.mostrar_admin(admin_rrhh)
+        else:
+            self.view.mostrar_mensaje("Administrador no encontrado.")
+
+    def listar_admin_rrhh(self) -> None:
+        admin_rrhh = AdminRrhhDAO.obtener_todos()
+        self.view.mostrar_lista_admin(admin_rrhh)
+
     def agregar_admin_rrhh(self) -> None:
         datos = self.view.formulario_nuevo_admin()
         try:
@@ -92,14 +104,3 @@ class AdminRrhhController:
         else:
             self.view.mostrar_mensaje("Operación cancelada.")
 
-    def imprimir_admin_rrhh(self) -> None:
-        id_admin = self.view.solicitar_id()
-        admin_rrhh = AdminRrhhDAO.obtener_por_id(id_admin)
-        if admin_rrhh:
-            self.view.mostrar_admin_rrhh(admin_rrhh)
-        else:
-            self.view.mostrar_mensaje("Administrador no encontrado.")
-
-    def imprimir_admin_rrhh(self) -> None:
-        admin_rrhh = AdminRrhhDAO.obtener_todos()
-        self.view.mostrar_lista_admin(admin_rrhh)              
