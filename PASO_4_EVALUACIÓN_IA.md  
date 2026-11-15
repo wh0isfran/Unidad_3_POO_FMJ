@@ -227,6 +227,6 @@ de la clase para mantener el patrón Singleton. Posteriormente, se debería inco
 ## 5.1.- Clase "Departamento": Decidí conservar la implementación de mi código, la cual fue desarrollada tomando como referencia el ejemplo entregado en clases (farmacia), debido a que se ajusta mejor
 a los contenidos y requisitos evaluados en este trabajo.
 
-## 5.2.- Clase "Database": Decidí incorporar la instrucción `PRAGMA foreign_keys = ON` a mi código, ya que contribuye a mejorar la integridad referencial y la consistencia de los datos almacenados
+## 5.2.- Clase "Database": Decidí incorporar la instrucción "PRAGMA foreign_keys = ON" a mi código, ya que contribuye a mejorar la integridad referencial y la consistencia de los datos almacenados
 en la base de datos. En cuanto a las demás modificaciones propuestas por la IA, preferí no implementarlas, debido a que mi código ya se encontraba funcional y consideré importante mantener su estabilidad.
 =================================================================================================================================================================================================
