@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import re
 
+
 class Usuario:
 
     ROLES: set[str] = {"Administrador RRHH", "Empleado", "Operador"}

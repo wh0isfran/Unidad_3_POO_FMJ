@@ -1,5 +1,6 @@
-from views.utils import leer_numero, leer_texto, confirmar
 from models.registro_tiempo import RegistroTiempo
+from views.utils import confirmar, leer_numero, leer_texto
+
 
 class RegistroTiempoView:
     @staticmethod
@@ -24,17 +25,24 @@ class RegistroTiempoView:
         descripcion = leer_texto("Ingrese la descripción: ")
         id_empleado = leer_numero("Ingrese el ID del empleado: ")
         id_proyecto = leer_numero("Ingrese el ID del proyecto: ")
+        print("\n--- Ciudad ---")
+        print("1.- Santiago")
+        print("2.- Valparaíso")
+        print("3.- Concepción")
+        ciudad = str (leer_numero("Seleccione la ciudad: "))
         return {
             "fecha": fecha,
             "hora": hora,
             "descripcion": descripcion,
             "id_empleado": id_empleado,
-            "id_proyecto": id_proyecto
+            "id_proyecto": id_proyecto,
+            "ciudad": ciudad
         }
-
+    
     @staticmethod
     def solicitar_id() -> int:
         return leer_numero("Ingrese el ID del registro de tiempo: ")
+    
 
     @staticmethod
     def mostrar_registro(registro: RegistroTiempo) -> None:
@@ -51,7 +59,28 @@ class RegistroTiempoView:
             for r in registros:
                 print(r)
         print("-" * 30)
+    @staticmethod
+    def mostrar_clima_registro(clima) -> None:
+        print("\n" + "=" * 50)
+        print("           CLIMA ASOCIADO AL REGISTRO")
+        print("=" * 50)
 
+        if clima is None:
+            print("No hay información meteorológica asociada.")
+            print("=" * 50)
+            return
+
+        ciudad, temperatura, humedad, viento, fecha = clima
+
+        print(f"  Ciudad              : {ciudad}")
+        print(f"  Temperatura         : {temperatura:.1f} °C")
+        print(f"  Humedad             : {humedad:.1f} %")
+        print(f"  Velocidad del viento: {viento:.1f} km/h")
+        print(f"  Fecha de consulta   : {fecha}")
+        print("-" * 50)
+        print("  Fuente: Open-Meteo | Datos guardados en SQLite")
+        print("=" * 50)
+        
     @staticmethod
     def formulario_editar_registro(registro: RegistroTiempo) -> dict:
         print(f"\n--- Editando Registro de Tiempo [ID: {registro.id_registro}] ---")

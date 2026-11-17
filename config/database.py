@@ -102,6 +102,18 @@ class Database:
                     contenido TEXT NOT NULL
                 )
             """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS registro_clima (
+                    id_clima INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_registro INTEGER NOT NULL UNIQUE,
+                    ciudad TEXT NOT NULL,
+                    temperatura REAL NOT NULL,
+                    humedad REAL NOT NULL,
+                    viento REAL NOT NULL,
+                    fecha_consulta TEXT NOT NULL,
+                    FOREIGN KEY (id_registro) REFERENCES registro_tiempo(id_registro) ON DELETE CASCADE
+                );
+            """)
 
             conn.commit()
         except sqlite3.Error as e:

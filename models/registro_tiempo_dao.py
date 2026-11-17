@@ -1,6 +1,9 @@
 from sqlite3 import Cursor
+
 from config.database import Database
+from models.clima import Clima
 from models.registro_tiempo import RegistroTiempo
+
 
 class RegistroTiempoDAO:
     @staticmethod
@@ -20,6 +23,83 @@ class RegistroTiempoDAO:
             return False
         finally:
             conn.close()
+
+    @staticmethod
+    def crear_con_clima(registro: RegistroTiempo, clima: Clima) -> bool:
+        conn = Database().get_connection()
+
+        try:
+            cursor: Cursor = conn.cursor()
+
+            cursor.execute(
+                """
+                INSERT INTO registro_tiempo
+                (fecha, hora, descripcion, id_empleado, id_proyecto)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    registro.fecha,
+                    registro.hora,
+                    registro.descripcion,
+                    registro.id_empleado,
+                    registro.id_proyecto
+                )
+            )
+
+            id_registro = cursor.lastrowid
+
+            cursor.execute(
+                """
+                INSERT INTO registro_clima
+                (id_registro, ciudad, temperatura, humedad, viento, fecha_consulta) VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    id_registro,
+                    clima.ciudad,
+                    clima.temperatura,
+                    clima.humedad,
+                    clima.viento,
+                    clima.fecha_consulta
+                )
+            )
+
+            conn.commit()
+            registro.id_registro = id_registro
+            clima.id_registro = id_registro
+
+            return True
+
+        except Exception as e:
+            conn.rollback()
+            print(f"Error al guardar registro y clima: {e}")
+            return False
+
+        finally:
+            conn.close()
+
+
+    @staticmethod
+    def obtener_clima_por_registro(id_registro: int):
+        conn = Database().get_connection()
+
+        try:
+            cursor: Cursor = conn.cursor()
+
+            cursor.execute(
+                """ SELECT ciudad, temperatura, humedad, viento, fecha_consulta FROM registro_clima WHERE id_registro = ?
+                """,
+                (id_registro,)
+            )
+
+            return cursor.fetchone()
+
+        except Exception as e:
+            print(f"Error al consultar clima: {e}")
+            return None
+
+        finally:
+            conn.close()
+
 
     @staticmethod
     def obtener_todos() -> list[RegistroTiempo]:
@@ -66,7 +146,7 @@ class RegistroTiempoDAO:
         finally:
             conn.close()
         return registro
-
+    
     @staticmethod
     def actualizar(registro: RegistroTiempo) -> bool:
         if registro.id_registro is None:

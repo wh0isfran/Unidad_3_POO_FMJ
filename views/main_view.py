@@ -1,5 +1,6 @@
-from views.utils import leer_numero
 from models.usuario import Usuario
+from views.utils import leer_numero
+
 
 class MainView:
     @staticmethod
@@ -13,9 +14,9 @@ class MainView:
         print("2.- Gestión de Departamentos")
         print("3.- Gestión de Empleados")
         print("4.- Gestión de Proyectos")
-        print("5.- Gestión de Registros de Tiempo")
+        print("5.- Gestión de Registros de Tiempo - (Consumo de API + Persistencia en SQLite)")
         print("6.- Gestión de Informes")
-        print("7.- Cambio de Moneda (USD/CLP)-(Consumo de API)")
+        print("7.- Cambio de Moneda - (Consumo de API)")
         print("8.- Gestión de usuarios (credenciales encriptadas)")
         print("9.- Cerrar sesión (cambiar de usuario)")
         print("0.- Salir del Sistema")

@@ -1,28 +1,31 @@
 
 from services.cambio_moneda_service import CambioMonedaService
+from views.cambio_moneda_view import CambioMonedaView
 
 
 class CambioMonedaController:
 
-    @staticmethod
-    def ejecutar():
-        print("\n===== CONSULTA DE TIPO DE CAMBIO =====")
+    def __init__(self):
+        self.view = CambioMonedaView()
 
-        origen = input("Moneda de origen (ej. USD): ")
-        destino = input("Moneda de destino (ej. CLP): ")
+    def ejecutar(self) -> None:
+        print("\n===== CONSULTA DE CAMBIO DE MONEDA =====")
+
+        origen = self.view.solicitar_moneda(
+            "Seleccione número de moneda de ORIGEN: "
+        )
+
+        destino = self.view.solicitar_moneda(
+            "Seleccione número de moneda de DESTINO: "
+        )
 
         resultado, mensaje = CambioMonedaService.consultar_tipo_cambio(
             origen, destino
         )
 
-        print(f"\n{mensaje}")
-
         if resultado is not None:
-            print(f"Fecha: {resultado['fecha']}")
-            print(f"Moneda origen: {resultado['origen']}")
-            print(f"Moneda destino: {resultado['destino']}")
-            print(
-                f"1 {resultado['origen']} = "
-                f"{resultado['valor']:.2f} "
-                f"{resultado['destino']}"
+            self.view.mostrar_resultado(
+                origen, destino, resultado, mensaje
             )
+        else:
+            self.view.mostrar_mensaje(mensaje)
