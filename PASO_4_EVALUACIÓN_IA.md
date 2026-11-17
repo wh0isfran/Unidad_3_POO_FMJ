@@ -24,7 +24,7 @@ class Departamento:
     def actualizar_descripcion(self, nueva_descripcion):
         self.descripcion = nueva_descripcion
 
-## 1.2.- Le solicité: "dame el codigo de la class Database: teniendo en cuenta las siguientes tablas: usuario, departamento, empleado,  proyecto, admin_rrhh, registro_tiempo, informe", me entregó lo siguiente:
+## 1.2.- Le solicité: "muéstrame el codigo de la class Database: teniendo en cuenta las siguientes tablas: usuario, departamento, empleado,  proyecto, admin_rrhh, registro_tiempo, informe", me entregó lo siguiente:
 
 import sqlite3
 
@@ -192,41 +192,46 @@ class Database:
 
 ### 2.- Análisis del código generado:
 
-## 2.1.- Análisis "class Departamento": A diferencia de la estructura de mi código en clase Departamento (orientado por el ejemplo entregado por el docente), 
-el entregado por la IA carece de validaciones, por ejemplo, no valida si el nombre está vacío,
-no comprueba si el departamento ingresado por el usuario ya existe o si los valores ingresados son numéricos y no texto.
+## 2.1.- Análisis "class Departamento": 
+A diferencia de la estructura de mi código en clase Departamento (orientado por el ejemplo entregado por el docente), el entregado por la IA carece de validaciones, por ejemplo, no valida 
+si el nombre está vacío, no comprueba si el departamento ingresado por el usuario ya existe o si los valores ingresados son numéricos y no texto.
 
-## 2.2.- Análisis de "class Database": La diferencia respecto de mi implementación no es muy grande. Sin embargo, cabe destacar que el código entregado por
- la IA incorpora una instrucción importante: "PRAGMA foreign_keys = ON", la cual evita que se registren relaciones con identificadores inexistentes, 
- ya que indica a SQLite que debe comprobar las restricciones de claves foráneas definidas entre las tablas mediante "FOREIGN KEY".
+## 2.2.- Análisis de "class Database": 
+La diferencia respecto de mi implementación no es muy grande. Sin embargo, cabe destacar que el código entregado por la IA incorpora una instrucción importante: "PRAGMA foreign_keys = ON",
+la cual evita que se registren relaciones con identificadores inexistentes, ya que indica a SQLite que debe comprobar las restricciones de claves foráneas definidas entre las tablas mediante "FOREIGN KEY".
 =================================================================================================================================================================================================
 
 ### 3.- Identificación de errores o vulnerabilidades:
 
-## 3.1.- Clase "Departamento" generada por IA: Permite modificar atributos sin realizar las validaciones correspondientes y no incluye mecanismos para detectar 
-condiciones que podrían provocar errores, como tipos de datos incorrectos o valores vacíos.
+## 3.1.- Clase "Departamento" generada por IA: 
+Permite modificar atributos sin realizar las validaciones correspondientes y no incluye mecanismos para detectar condiciones que podrían provocar errores, como tipos de datos incorrectos
+o valores vacíos.
 
-## 3.2.- Clase "Database" generada por IA: El código entregado por la IA presenta un manejo de excepciones similar al de mi implementación, mediante el uso de 
-"except sqlite3.Error as error".
+## 3.2.- Clase "Database" generada por IA: 
+El código entregado por la IA presenta un manejo de excepciones similar al de mi implementación, mediante el uso de "except sqlite3.Error as error".
 
 =================================================================================================================================================================================================
 
 ### 4.- Ajuste del código (criterios técnicos):
 
-## 4.1.- Clase "Departamento": Para que el código generado por la IA cumpla con los requisitos de esta evaluación, es importante incorporar un manejo adecuado de excepciones. Otro punto importante 
-que podría asimilarse a mi implementación es el diseño de la clase, ya que mi código utiliza métodos "getter" y "setter", mientras que el código generado por la IA define principalmente métodos 
-para actualizar y mostrar los atributos.
+## 4.1.- Clase "Departamento": 
+Para que el código generado por la IA cumpla con los requisitos de esta evaluación, es importante incorporar un manejo adecuado de excepciones. Otro punto importante que podría asimilarse a mi 
+implementación es el diseño de la clase, ya que mi código utiliza métodos "getter" y "setter", mientras que el código generado por la IA define principalmente métodos para actualizar y mostrar los atributos.
 
-## 4.2.- Clase -"Database": Para que el código generado por la IA sea más acorde con lo visto en clases y con los requisitos del ejercicio, el método "__new__(cls)" debería implementarse al inicio 
-de la clase para mantener el patrón Singleton. Posteriormente, se debería incorporar el método "init_db()" con la estructura de las tablas requeridas.
+## 4.2.- Clase -"Database": 
+Para que el código generado por la IA sea más acorde con lo visto en clases y con los requisitos del ejercicio, el método "__new__(cls)" debería implementarse al inicio de la clase para mantener el 
+patrón Singleton. Posteriormente, se debería incorporar el método "init_db()" con la estructura de las tablas requeridas.
 
 =================================================================================================================================================================================================
 
 ### 5.- Justificación decisiones adoptadas:
 
-## 5.1.- Clase "Departamento": Decidí conservar la implementación de mi código, la cual fue desarrollada tomando como referencia el ejemplo entregado en clases (farmacia), debido a que se ajusta mejor
-a los contenidos y requisitos evaluados en este trabajo.
+## 5.1.- Clase "Departamento": 
+Decidí conservar la implementación de mi código, la cual fue desarrollada tomando como referencia el ejemplo entregado en clases (farmacia), debido a que se ajusta mejora los contenidos y 
+requisitos evaluados en este trabajo.
 
-## 5.2.- Clase "Database": Decidí incorporar la instrucción "PRAGMA foreign_keys = ON" a mi código, ya que contribuye a mejorar la integridad referencial y la consistencia de los datos almacenados
-en la base de datos. En cuanto a las demás modificaciones propuestas por la IA, preferí no implementarlas, debido a que mi código ya se encontraba funcional y consideré importante mantener su estabilidad.
+## 5.2.- Clase "Database": 
+Decidí incorporar la instrucción "PRAGMA foreign_keys = ON" a mi código, ya que contribuye a mejorar la integridad referencial y la consistencia de los datos almacenados en la base de datos. 
+En cuanto a las demás modificaciones propuestas por la IA, preferí no implementarlas, debido a que mi código ya se encontraba funcional y consideré importante mantener su estabilidad.
+
 =================================================================================================================================================================================================

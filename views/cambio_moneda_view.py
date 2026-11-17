@@ -18,28 +18,25 @@ class CambioMonedaView:
             print("3.- Peso chileno (CLP)")
             print("4.- Libra esterlina (GBP)")
             print("5.- Yen japonés (JPY)")
-            print("6.- Otra moneda")
-
+            print("6.- Otra moneda (Formato ISO 4217)")
             opcion = input(mensaje).strip()
-
+            
             if opcion in monedas:
                 return monedas[opcion]
-
+            
             if opcion == "6":
                 codigo = input(
-                    "Ingrese código ISO (ej. BRL): "
+                    "Ingrese código ISO (ej. Real Brasileño = BRL): "
                 ).strip().upper()
-
                 if (
                     len(codigo) == 3
                     and codigo.isascii()
                     and codigo.isalpha()
                 ):
                     return codigo
-
+                
                 print("Código inválido.")
                 continue
-
             print("Opción inválida.")
 
     @staticmethod
@@ -62,7 +59,7 @@ class CambioMonedaView:
         print("-" * 50)
         print(f"  Estado: {mensaje}")
         print("=" * 50)
-        
+
     @staticmethod
     def mostrar_mensaje(mensaje: str) -> None:
         print(f"\n[CAMBIO MONEDA] {mensaje}")
