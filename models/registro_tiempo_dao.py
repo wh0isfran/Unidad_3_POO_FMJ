@@ -33,16 +33,9 @@ class RegistroTiempoDAO:
 
             cursor.execute(
                 """
-                INSERT INTO registro_tiempo
-                (fecha, hora, descripcion, id_empleado, id_proyecto)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO registro_tiempo (fecha, hora, descripcion, id_empleado, id_proyecto) VALUES (?, ?, ?, ?, ?)
                 """,
-                (
-                    registro.fecha,
-                    registro.hora,
-                    registro.descripcion,
-                    registro.id_empleado,
-                    registro.id_proyecto
+                (registro.fecha, registro.hora, registro.descripcion, registro.id_empleado, registro.id_proyecto
                 )
             )
 
@@ -54,12 +47,7 @@ class RegistroTiempoDAO:
                 (id_registro, ciudad, temperatura, humedad, viento, fecha_consulta) VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    id_registro,
-                    clima.ciudad,
-                    clima.temperatura,
-                    clima.humedad,
-                    clima.viento,
-                    clima.fecha_consulta
+                    id_registro, clima.ciudad, clima.temperatura, clima.humedad, clima.viento, clima.fecha_consulta
                 )
             )
 

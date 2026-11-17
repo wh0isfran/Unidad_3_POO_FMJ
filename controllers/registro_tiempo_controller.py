@@ -118,7 +118,7 @@ class RegistroTiempoController:
                 self.view.mostrar_mensaje("Error al eliminar en la base de datos.")
         else:
             self.view.mostrar_mensaje("Operación cancelada.")
-            
+
     def imprimir_registro(self) -> None:
         id_reg = self.view.solicitar_id()
         registro = RegistroTiempoDAO.obtener_por_id(id_reg)

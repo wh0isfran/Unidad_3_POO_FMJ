@@ -9,7 +9,7 @@ except ImportError:
     pass
 
 class Settings:
-    API_MONEDA_URL: str = os.getenv("API_MONEDA_URL", "https://api.frankfurter.dev/v2/rate")
+    API_MONEDA_URL: str = os.getenv("API_MONEDA_URL", "https://api.frankfurter.dev/v2")
     API_CLIMA_URL: str = os.getenv("API_CLIMA_URL", "https://api.open-meteo.com/v1/forecast")
     API_KEY: str = os.getenv("API_KEY", "")
     REQUEST_TIMEOUT: int = int(os.getenv("REQUEST_TIMEOUT", "10"))
