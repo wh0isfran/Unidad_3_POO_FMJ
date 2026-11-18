@@ -25,7 +25,7 @@ class RegistroTiempoView:
         descripcion = leer_texto("Ingrese la descripción: ")
         id_empleado = leer_numero("Ingrese el ID del empleado: ")
         id_proyecto = leer_numero("Ingrese el ID del proyecto: ")
-        print("\n--- Ciudad ---")
+        print("\n--- Ciudad Sucursal ---") #Son las 3 ciudades donde hipoteticamente se encuentran las sucursales de la empresa.
         print("1.- Santiago")
         print("2.- Valparaíso")
         print("3.- Concepción")

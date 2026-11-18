@@ -6,7 +6,7 @@ class MainView:
     @staticmethod
     def mostrar_menu(usuario_actual: Usuario | None = None) -> int:
         print("\n" + "=" * 55)
-        print("     ECHOTECH SOLUTIONS - MENÚ PRINCIPAL (U3)")
+        print("     ECHOTECH SOLUTIONS - MENÚ PRINCIPAL")
         if usuario_actual:
             print(f"     Sesión activa: {usuario_actual.username} ({usuario_actual.rol})")
         print("=" * 55)

@@ -13,19 +13,6 @@ class AuthView:
         print("-" * 55)
 
     @staticmethod
-    def seleccionar_rol() -> str:
-        print("\nSeleccione el rol del usuario:")
-        print("1.- Administrador RRHH")
-        print("2.- Empleado")
-        print("3.- Operador")
-        roles = {1: "Administrador RRHH", 2: "Empleado", 3: "Operador"}
-        while True:
-            opcion = leer_numero("Ingrese el número correspondiente al rol: ")
-            if opcion in roles:
-                return roles[opcion]
-            print("Opción no válida. Por favor, intente nuevamente.")
-
-    @staticmethod
     def solicitar_credenciales() -> dict:
         username = input("Usuario    : ").strip()
         clave = input("Contraseña : ").strip()
